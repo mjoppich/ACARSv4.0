@@ -1,5 +1,5 @@
 #include <QtGui/QApplication>
-#include "ACARSMainWindow.h"
+#include <Core/ACARSMainWindow.h>
 
 int main(int argc, char *argv[])
 {

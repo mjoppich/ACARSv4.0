@@ -10,9 +10,11 @@ TARGET = FTGACARS
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        ACARSMainWindow.cpp
+SOURCES   += main.cpp\
+            "Core\ACARSMainWindow.cpp"\
+            "Core\ACARSMenuView.cpp"\
 
-HEADERS  += ACARSMainWindow.h
+HEADERS  += "Core\ACARSMainWindow.h"\
+            "Core\ACARSMenuView.h"\
 
-FORMS    += ACARSMainWindow.ui
+FORMS    += "Core\ACARSMainWindow.ui"
