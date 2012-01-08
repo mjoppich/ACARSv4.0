@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include <Core/ACARSMenuView.h>
+
 namespace Ui {
     class ACARSMainWindow;
 }
@@ -13,10 +15,17 @@ class ACARSMainWindow : public QMainWindow
 
 public:
     explicit ACARSMainWindow(QWidget *parent = 0);
+    Init();
     ~ACARSMainWindow();
 
 private:
-    Ui::ACARSMainWindow *ui;
+
+    bool eventFilter(QObject *pObj, QEvent *pEvent);
+
+
+    Ui::ACARSMainWindow *m_pUI;
+
+    ACARSMenuView m_pCurrentView;
 };
 
 #endif // ACARSMAINWINDOW_H

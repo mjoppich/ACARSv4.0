@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui console
 
 TARGET = FTGACARS
 TEMPLATE = app
@@ -13,8 +13,20 @@ TEMPLATE = app
 SOURCES   += main.cpp\
             "Core\ACARSMainWindow.cpp"\
             "Core\ACARSMenuView.cpp"\
+    Core/ACARSInputRegistry.cpp \
+    Core/ACARSCore.cpp \
+    Core/ACARSInput.cpp
 
 HEADERS  += "Core\ACARSMainWindow.h"\
             "Core\ACARSMenuView.h"\
+    Core/ACARSInputRegistry.h \
+    Core/ACARSCore.h \
+    Core/ACARSInput.h
 
 FORMS    += "Core\ACARSMainWindow.ui"
+
+
+
+
+
+
