@@ -1,6 +1,5 @@
 #include "ACARSInputRegistry.h"
 
-ACARSInputRegistry::(ACARSMainWindow *pParent):
-
+ACARSInputRegistry::ACARSInputRegistry(ACARSMainWindow *pParent)
 {
 }

@@ -13,8 +13,8 @@ class ACARSInputRegistry : public QObject
 public:
     explicit ACARSInputRegistry(ACARSMainWindow *pParent);
 
-    RegisterInput(ACARSInput *pInput);
-    DeRegisterInput(ACARSInput *pInput);
+    void RegisterInput(ACARSInput *pInput);
+    void DeRegisterInput(ACARSInput *pInput);
 
 signals:
 
@@ -23,7 +23,7 @@ public slots:
 protected:
     ACARSMainWindow *m_pParentWindow;
 
-    QVector<*ACARSInput> *m_pInputs;
+    QVector<ACARSInput> *m_pInputs;
 
 };
 

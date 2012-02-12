@@ -15,7 +15,7 @@ class ACARSMainWindow : public QMainWindow
 
 public:
     explicit ACARSMainWindow(QWidget *parent = 0);
-    Init();
+    void Init();
     ~ACARSMainWindow();
 
 private:

@@ -48,7 +48,7 @@ bool ACARSMainWindow::eventFilter(QObject *pObj, QEvent *pEvent)
 
 }
 
-ACARSMainWindow::Init()
+void ACARSMainWindow::Init()
 {
 
 
