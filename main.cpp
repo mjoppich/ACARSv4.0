@@ -1,14 +1,13 @@
 #include <QtGui/QApplication>
-#include <Core/ACARSMainWindow.h>
+#include <Core/ACARSCore.h>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-
-
-    ACARSMainWindow w;
-    w.show();
+    ACARSCore System(&a);
+    System.ACARSInit();
+    System.ACARSStart();
 
     return a.exec();
 }

@@ -2,12 +2,18 @@
 #define ACARSMAINWINDOW_H
 
 #include <QMainWindow>
+#include <QLineEdit>
 
-#include <Core/ACARSMenuView.h>
+
 
 namespace Ui {
     class ACARSMainWindow;
 }
+
+class ACARSInputRegistry;
+class ACARSMenuView;
+class ACARSInput;
+class ACARSInputEvent;
 
 class ACARSMainWindow : public QMainWindow
 {
@@ -16,6 +22,11 @@ class ACARSMainWindow : public QMainWindow
 public:
     explicit ACARSMainWindow(QWidget *parent = 0);
     void Init();
+    void GetInputEventsQueue(QVector<ACARSInputEvent *> *copyto);
+    void WriteInputLine(const char* c);
+
+    bool ProcessInputs();
+
     ~ACARSMainWindow();
 
 private:
@@ -24,8 +35,12 @@ private:
 
 
     Ui::ACARSMainWindow *m_pUI;
+    QLineEdit* mACARSInputLine;
 
-    ACARSMenuView m_pCurrentView;
+    ACARSInputRegistry *m_pInputRegistry;
+    ACARSInput *m_pDefaultInput;
+
+    QVector<ACARSInputEvent*> m_vInputEvents;
 };
 
 #endif // ACARSMAINWINDOW_H

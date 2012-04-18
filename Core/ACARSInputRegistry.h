@@ -3,8 +3,11 @@
 
 #include <QObject>
 #include <QVector>
+#include <QMouseEvent>
+#include <QDebug>
 
 class ACARSInput;
+class ACARSInputEvent;
 class ACARSMainWindow;
 
 class ACARSInputRegistry : public QObject
@@ -16,6 +19,8 @@ public:
     void RegisterInput(ACARSInput *pInput);
     void DeRegisterInput(ACARSInput *pInput);
 
+    ACARSInputEvent* ClickEvent(QMouseEvent *pEvent);
+
 signals:
 
 public slots:
@@ -23,7 +28,7 @@ public slots:
 protected:
     ACARSMainWindow *m_pParentWindow;
 
-    QVector<ACARSInput> *m_pInputs;
+    QVector<ACARSInput*> m_vInputs;
 
 };
 
