@@ -1,8 +1,9 @@
 #include "ACARSInputRegistry.h"
 #include <Core/ACARSInput.h>
 
-ACARSInputRegistry::ACARSInputRegistry(ACARSMainWindow *pParent)
+ACARSInputRegistry::ACARSInputRegistry(ACARSSystem *pParent)
 {
+    m_vInputs.clear();
 }
 
 void ACARSInputRegistry::RegisterInput(ACARSInput *pInput)
@@ -10,14 +11,21 @@ void ACARSInputRegistry::RegisterInput(ACARSInput *pInput)
     m_vInputs.append(pInput);
 }
 
-ACARSInputEvent* ACARSInputRegistry::ClickEvent(QMouseEvent *pEvent)
+bool ACARSInputRegistry::ClickEvent(QMouseEvent *pEvent, QVector<ACARSInputEvent *> *ResultVector)
 {
 
-    if (m_vInputs.constBegin() != m_vInputs.constEnd())
-    {
-        return ((ACARSInput*)(m_vInputs.begin()))->EvaluateClick(pEvent);
+    ACARSInputEvent* pReturnValue;
+    int i;
+
+    for (i = 0; i < m_vInputs.size(); ++i) {
+
+        pReturnValue = m_vInputs.at(i)->EvaluateClick(pEvent);
+
+        if (pReturnValue)
+            ResultVector->append(pReturnValue);
+
     }
 
-    return NULL;
+    return i;
 
 }

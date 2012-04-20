@@ -1,13 +1,12 @@
 #include <QtGui/QApplication>
-#include <Core/ACARSCore.h>
+#include <Core/ACARSSystem.h>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    ACARSCore System(&a);
-    System.ACARSInit();
-    System.ACARSStart();
+    ACARSSystem *System = new ACARSSystem();
+    System->Start();
 
     return a.exec();
 }

@@ -8,25 +8,25 @@
 
 class ACARSInput;
 class ACARSInputEvent;
-class ACARSMainWindow;
+class ACARSSystem;
 
 class ACARSInputRegistry : public QObject
 {
     Q_OBJECT
 public:
-    explicit ACARSInputRegistry(ACARSMainWindow *pParent);
+    explicit ACARSInputRegistry(ACARSSystem *pParent);
 
     void RegisterInput(ACARSInput *pInput);
     void DeRegisterInput(ACARSInput *pInput);
 
-    ACARSInputEvent* ClickEvent(QMouseEvent *pEvent);
+    bool ClickEvent(QMouseEvent *pEvent, QVector<ACARSInputEvent *> *ResultVector);
 
 signals:
 
 public slots:
 
 protected:
-    ACARSMainWindow *m_pParentWindow;
+    ACARSSystem *m_pParentWindow;
 
     QVector<ACARSInput*> m_vInputs;
 

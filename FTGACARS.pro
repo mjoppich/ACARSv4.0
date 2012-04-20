@@ -11,19 +11,24 @@ TEMPLATE = app
 
 
 SOURCES   += main.cpp\
-            "Core\ACARSMainWindow.cpp"\
-            "Core\ACARSMenuView.cpp"\
+            Core/ACARSMenuView.cpp\
     Core/ACARSInputRegistry.cpp \
-    Core/ACARSCore.cpp \
-    Core/ACARSInput.cpp
+    Core/ACARSInput.cpp \
+    Core/ACARSDataBunk.cpp \
+    FlightSim/ACARSFlightSimData.cpp \
+    Core/ACARSUser.cpp \
+    Core/ACARSSystem.cpp
 
-HEADERS  += "Core\ACARSMainWindow.h"\
-            "Core\ACARSMenuView.h"\
+HEADERS  +=\
+            Core/ACARSMenuView.h\
     Core/ACARSInputRegistry.h \
-    Core/ACARSCore.h \
-    Core/ACARSInput.h
+    Core/ACARSInput.h \
+    Core/ACARSDataBunk.h \
+    FlightSim/ACARSFlightSimData.h \
+    Core/ACARSUser.h \
+    Core/ACARSSystem.h
 
-FORMS    += "Core\ACARSMainWindow.ui"
+FORMS    += Core/ACARSMainWindow.ui
 
 
 
