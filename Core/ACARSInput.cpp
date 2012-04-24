@@ -1,32 +1,11 @@
 #include "ACARSInput.h"
+#include <Core/ACARSEvents.h>
 
-ACARSInputEvent::ACARSInputEvent(ACARSInputEvent::ETYPE type, QString input)
-    : mInput(input)
-{
-    mEventType = type;
-}
 
-QString *ACARSInputEvent::getInputValue()
-{
-    return &mInput;
-}
-
-bool ACARSInputEvent::isEventType(ACARSInputEvent::ETYPE compareto)
-{
-    if (compareto == mEventType)
-        return true;
-
-    return false;
-}
-
-ACARSInputEvent::ETYPE ACARSInputEvent::getEventType()
-{
-    return mEventType;
-}
 
 //----------------------------------------------------------
 
-ACARSInputEvent* ACARSVKeyBoardInput::EvaluateClick(QMouseEvent *pEvent)
+ACARSActionEvent* ACARSVKeyBoardInput::EvaluateClick(QMouseEvent *pEvent)
 {
     qDebug() << "(" << pEvent->x() << "," << pEvent->y() << ")" << endl;
 
@@ -40,27 +19,27 @@ ACARSInputEvent* ACARSVKeyBoardInput::EvaluateClick(QMouseEvent *pEvent)
 
         if ((ClickX < 245) && (ClickX > 205))
         {
-            return new ACARSInputEvent(ACARSInputEvent::VKEY,"A");
+            return new ACARSActionEvent(ACARSEVENT::VKEY,"A");
         }
 
         if ((ClickX < 295) && (ClickX > 255))
         {
-            return new ACARSInputEvent(ACARSInputEvent::VKEY,"B");
+            return new ACARSActionEvent(ACARSEVENT::VKEY,"B");
         }
 
         if ((ClickX < 345) && (ClickX > 305))
         {
-            return new ACARSInputEvent(ACARSInputEvent::VKEY,"C");
+            return new ACARSActionEvent(ACARSEVENT::VKEY,"C");
         }
 
         if ((ClickX < 395) && (ClickX > 355))
         {
-            return new ACARSInputEvent(ACARSInputEvent::VKEY,"D");
+            return new ACARSActionEvent(ACARSEVENT::VKEY,"D");
         }
 
         if ((ClickX < 445) && (ClickX > 405))
         {
-            return new ACARSInputEvent(ACARSInputEvent::VKEY,"E");
+            return new ACARSActionEvent(ACARSEVENT::VKEY,"E");
         }
 
 
@@ -75,7 +54,7 @@ ACARSInputEvent* ACARSVKeyBoardInput::EvaluateClick(QMouseEvent *pEvent)
 
 //----------------------------------------------------------
 
-ACARSInputEvent* ACARSSpecialKeyKeyBInput::EvaluateClick(QMouseEvent *pEvent)
+ACARSActionEvent* ACARSSpecialKeyKeyBInput::EvaluateClick(QMouseEvent *pEvent)
 {
     int ClickX, ClickY;
     ClickX = pEvent->x();
@@ -87,12 +66,12 @@ ACARSInputEvent* ACARSSpecialKeyKeyBInput::EvaluateClick(QMouseEvent *pEvent)
 
         if ((ClickX < 345) && (ClickX > 305))
         {
-            return new ACARSInputEvent(ACARSInputEvent::MENU, "D");
+            return new ACARSActionEvent(ACARSEVENT::ILINE, "D");
         }
 
         if ((ClickX < 445) && (ClickX > 405))
         {
-            return new ACARSInputEvent(ACARSInputEvent::MENU, "C");
+            return new ACARSActionEvent(ACARSEVENT::ILINE, "C");
         }
 
     }
@@ -102,7 +81,7 @@ ACARSInputEvent* ACARSSpecialKeyKeyBInput::EvaluateClick(QMouseEvent *pEvent)
 }
 //----------------------------------------------------------
 
-ACARSInputEvent* ACARSLSKinput::EvaluateClick(QMouseEvent *pEvent)
+ACARSActionEvent* ACARSLSKinput::EvaluateClick(QMouseEvent *pEvent)
 {
     int ClickX, ClickY;
     ClickX = pEvent->x();
@@ -114,12 +93,12 @@ ACARSInputEvent* ACARSLSKinput::EvaluateClick(QMouseEvent *pEvent)
 
         if ((ClickX < 35) && (ClickX > 0))
         {
-            return new ACARSInputEvent(ACARSInputEvent::LSK, "L1");
+            return new ACARSActionEvent(ACARSEVENT::LSK, "L1");
         }
 
         if ((ClickX < 500) && (ClickX > 465))
         {
-            return new ACARSInputEvent(ACARSInputEvent::LSK, "R1");
+            return new ACARSActionEvent(ACARSEVENT::LSK, "R1");
         }
 
     }
@@ -129,12 +108,12 @@ ACARSInputEvent* ACARSLSKinput::EvaluateClick(QMouseEvent *pEvent)
 
         if ((ClickX < 35) && (ClickX > 0))
         {
-            return new ACARSInputEvent(ACARSInputEvent::LSK, "L2");
+            return new ACARSActionEvent(ACARSEVENT::LSK, "L2");
         }
 
         if ((ClickX < 500) && (ClickX > 465))
         {
-            return new ACARSInputEvent(ACARSInputEvent::LSK, "R2");
+            return new ACARSActionEvent(ACARSEVENT::LSK, "R2");
         }
 
     }
@@ -144,12 +123,12 @@ ACARSInputEvent* ACARSLSKinput::EvaluateClick(QMouseEvent *pEvent)
 
         if ((ClickX < 35) && (ClickX > 0))
         {
-            return new ACARSInputEvent(ACARSInputEvent::LSK, "L3");
+            return new ACARSActionEvent(ACARSEVENT::LSK, "L3");
         }
 
         if ((ClickX < 500) && (ClickX > 465))
         {
-            return new ACARSInputEvent(ACARSInputEvent::LSK, "R3");
+            return new ACARSActionEvent(ACARSEVENT::LSK, "R3");
         }
 
     }
@@ -159,12 +138,12 @@ ACARSInputEvent* ACARSLSKinput::EvaluateClick(QMouseEvent *pEvent)
 
         if ((ClickX < 35) && (ClickX > 0))
         {
-            return new ACARSInputEvent(ACARSInputEvent::LSK, "L4");
+            return new ACARSActionEvent(ACARSEVENT::LSK, "L4");
         }
 
         if ((ClickX < 500) && (ClickX > 465))
         {
-            return new ACARSInputEvent(ACARSInputEvent::LSK, "R4");
+            return new ACARSActionEvent(ACARSEVENT::LSK, "R4");
         }
 
     }
@@ -174,12 +153,12 @@ ACARSInputEvent* ACARSLSKinput::EvaluateClick(QMouseEvent *pEvent)
 
         if ((ClickX < 35) && (ClickX > 0))
         {
-            return new ACARSInputEvent(ACARSInputEvent::LSK, "L5");
+            return new ACARSActionEvent(ACARSEVENT::LSK, "L5");
         }
 
         if ((ClickX < 500) && (ClickX > 465))
         {
-            return new ACARSInputEvent(ACARSInputEvent::LSK, "R5");
+            return new ACARSActionEvent(ACARSEVENT::LSK, "R5");
         }
 
     }
@@ -189,12 +168,12 @@ ACARSInputEvent* ACARSLSKinput::EvaluateClick(QMouseEvent *pEvent)
 
         if ((ClickX < 35) && (ClickX > 0))
         {
-            return new ACARSInputEvent(ACARSInputEvent::LSK, "L6");
+            return new ACARSActionEvent(ACARSEVENT::LSK, "L6");
         }
 
         if ((ClickX < 500) && (ClickX > 465))
         {
-            return new ACARSInputEvent(ACARSInputEvent::LSK, "R6");
+            return new ACARSActionEvent(ACARSEVENT::LSK, "R6");
         }
 
     }

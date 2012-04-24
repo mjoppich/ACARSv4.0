@@ -7,7 +7,7 @@
 #include <QDebug>
 
 class ACARSInput;
-class ACARSInputEvent;
+class ACARSActionEvent;
 class ACARSSystem;
 
 class ACARSInputRegistry : public QObject
@@ -19,7 +19,7 @@ public:
     void RegisterInput(ACARSInput *pInput);
     void DeRegisterInput(ACARSInput *pInput);
 
-    bool ClickEvent(QMouseEvent *pEvent, QVector<ACARSInputEvent *> *ResultVector);
+    bool ClickEvent(QMouseEvent *pEvent, QVector<ACARSActionEvent *> *ResultVector);
 
 signals:
 

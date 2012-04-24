@@ -1,7 +1,8 @@
 #include "ACARSSystem.h"
-#include <Core/ACARSMenuView.h>
+#include <Core/ACARSMenu.h>
 #include <Core/ACARSInputRegistry.h>
 #include <Core/ACARSInput.h>
+#include <Core/ACARSEvents.h>
 
 
 #include"ui_ACARSMainWindow.h"
@@ -12,6 +13,7 @@
 #include <QTime>
 #include <QDebug>
 #include <QPalette>
+#include <QCursor>
 
 
 ACARSSystem::ACARSSystem(QWidget *parent) :
@@ -53,8 +55,7 @@ ACARSSystem::ACARSSystem(QWidget *parent) :
     f.setPixelSize(18);
     mACARSInputLine->setFont(f);
 
-
-    m_pActiveView = new ACARSMenuView(this);
+    m_pActiveView = new ACARSMenu(this);
     m_pActiveView->setInputLine(mACARSInputLine);
     m_pActiveView->setStyleSheet("QWidget { background-color: black;}");
     m_pActiveView->move(65,85);
@@ -98,6 +99,12 @@ bool ACARSSystem::eventFilter(QObject *pObj, QEvent *pEvent)
 
     }
 
+    if (pEvent->type() == ACARSEVENT::LOGINEVENT)
+    {
+        QString SentString(*(QString*)pObj);
+        qDebug() << SentString << SentString.length();
+    }
+
     return false;
 
 }
@@ -109,9 +116,9 @@ void ACARSSystem::Start()
     m_pTimer->start(10);
 }
 
-void ACARSSystem::GetInputEventsQueue(QVector<ACARSInputEvent*> *copyto)
+void ACARSSystem::GetInputEventsQueue(QVector<ACARSActionEvent*> *copyto)
 {
-    ACARSInputEvent* pCurrentIE;
+    ACARSActionEvent* pCurrentIE;
 
     while(m_vInputEvents.count())
     {
@@ -143,11 +150,11 @@ void ACARSSystem::DelFromInputLine()
 bool ACARSSystem::SystemLoop()
 {
     // Get Events
-    QVector<ACARSInputEvent*> pInputQueue;
+    QVector<ACARSActionEvent*> pInputQueue;
     this->GetInputEventsQueue(&pInputQueue);
 
     //Debug ACARSInputEvents
-    ACARSInputEvent* pCurrentIE;
+    ACARSActionEvent* pCurrentIE;
 
     while(pInputQueue.count())
     {
@@ -155,14 +162,14 @@ bool ACARSSystem::SystemLoop()
 
         // Work CORE EVENTS - NOTE: These must NOT alter pInputQueue!
 
-        if (pCurrentIE->isEventType(ACARSInputEvent::VKEY))
+        if (pCurrentIE->isEventType(ACARSEVENT::VKEY))
         {
              this->WriteInputLine(pCurrentIE->getInputValue());
         }
 
         this->HandleEvents(pCurrentIE);
 
-        if (pCurrentIE->isEventType(ACARSInputEvent::MENU))
+        if (pCurrentIE->isEventType(ACARSEVENT::ILINE))
         {
             if (pCurrentIE->getInputValue()->compare("C"))
                 this->ClearInputLine();
@@ -182,15 +189,15 @@ bool ACARSSystem::SystemLoop()
     }
 
     this->show();
-    m_pActiveView->show();
+    m_pActiveView->display();
 
     return true;
 }
 
-void ACARSSystem::HandleEvents(ACARSInputEvent *pIEvent)
+void ACARSSystem::HandleEvents(ACARSActionEvent *pIEvent)
 {
 
-    if (pIEvent->getEventType() != ACARSInputEvent::MENU)
+    if (pIEvent->getEventType() != ACARSEVENT::MENU)
     {
 
         m_pActiveView->handleEvent(pIEvent);

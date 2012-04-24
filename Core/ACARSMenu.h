@@ -7,8 +7,12 @@
 #include <QWidget>
 #include <QLabel>
 #include <QLineEdit>
+#include <QEvent>
 
-class ACARSMenuView : public QWidget
+class ACARSActionEvent;
+class ACARSMenuPage;
+
+class ACARSMenu : public QWidget
 {
     Q_OBJECT
 
@@ -17,24 +21,26 @@ public:
     enum LINE {MAIN, HELPER};
     enum COLOR {AMBER, GREEN};
 
-    explicit ACARSMenuView(QWidget *parent);
+    explicit ACARSMenu(QWidget *parent);
 
     void setInputLine(QLineEdit *pInputLine);
 
-    void setText(QString *Text, QString *Position, LINE label=ACARSMenuView::MAIN);
-    void setTextWithFormat(QString *Text, QString *Position, LINE label=ACARSMenuView::MAIN, COLOR color=ACARSMenuView::GREEN);
+    void setText(QString *Text, QString *Position, LINE label=ACARSMenu::MAIN);
+    void setTextWithFormat(QString *Text, QString *Position, LINE label=ACARSMenu::MAIN, COLOR color=ACARSMenu::GREEN);
 
-    void handleEvent(ACARSInputEvent *pIEvent);
+    void handleEvent(ACARSActionEvent *pIEvent);
     void updateFSData(ACARSFlightSimData* pNewData);
+
+    void display();
 
 private:
     QLabel *PlaceHolder;
 
-    QLabel* MainLabels[12];
-    QLabel* SecondLabels[12];
-
     QLineEdit *m_pInputLine;
     ACARSFlightSimData* m_pFSData;
+
+    ACARSMenuPage *m_pMenuPages[5];
+    ACARSMenuPage *m_pCurrentMenu;
 
 };
 

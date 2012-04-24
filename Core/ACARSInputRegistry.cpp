@@ -11,10 +11,10 @@ void ACARSInputRegistry::RegisterInput(ACARSInput *pInput)
     m_vInputs.append(pInput);
 }
 
-bool ACARSInputRegistry::ClickEvent(QMouseEvent *pEvent, QVector<ACARSInputEvent *> *ResultVector)
+bool ACARSInputRegistry::ClickEvent(QMouseEvent *pEvent, QVector<ACARSActionEvent *> *ResultVector)
 {
 
-    ACARSInputEvent* pReturnValue;
+    ACARSActionEvent* pReturnValue;
     int i;
 
     for (i = 0; i < m_vInputs.size(); ++i) {

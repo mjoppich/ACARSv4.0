@@ -1,13 +1,10 @@
-#include "ACARSMenuView.h"
+#include "ACARSMenuPage.h"
 
-#include <QPalette>
-#include <QFont>
-#include <QSize>
+#include <QDebug>
 
-ACARSMenuView::ACARSMenuView(QWidget *parent)
+ACARSMenuPage::ACARSMenuPage(QWidget *parent)
     : QWidget(parent)
 {
-
     this->setFixedSize(365,240);
 
     PlaceHolder = new QLabel(this);
@@ -81,12 +78,15 @@ ACARSMenuView::ACARSMenuView(QWidget *parent)
 
 }
 
-void ACARSMenuView::setInputLine(QLineEdit *pInputLine)
+ACARSMenuPage::ACARSMenuPage(QWidget *parent, int thispage, int pagecount)
+    : ACARSMenuPage(parent)
 {
-    m_pInputLine = pInputLine;
+    m_iPageCount = pagecount;
+    m_iPageNum = thispage;
+
 }
 
-void ACARSMenuView::setText(QString *Text, QString *Position, ACARSMenuView::LINE label)
+void ACARSMenuPage::setText(QString *Text, QString *Position, ACARSMenu::LINE label)
 {
 
     int i = 0;
@@ -100,12 +100,12 @@ void ACARSMenuView::setText(QString *Text, QString *Position, ACARSMenuView::LIN
 
     switch (label)
     {
-    case ACARSMenuView::MAIN:
+    case ACARSMenu::MAIN:
         {
             MainLabels[i]->setText(*Text);
         } break;
 
-    case ACARSMenuView::HELPER:
+    case ACARSMenu::HELPER:
         {
             SecondLabels[i]->setText(*Text);
         } break;
@@ -116,7 +116,7 @@ void ACARSMenuView::setText(QString *Text, QString *Position, ACARSMenuView::LIN
 
 }
 
-void ACARSMenuView::setTextWithFormat(QString *Text, QString *Position, LINE label, COLOR color)
+void ACARSMenuPage::setTextWithFormat(QString *Text, QString *Position, ACARSMenu::LINE label, ACARSMenu::COLOR color)
 {
 
     int i = 0;
@@ -132,12 +132,12 @@ void ACARSMenuView::setTextWithFormat(QString *Text, QString *Position, LINE lab
 
     switch (label)
     {
-    case ACARSMenuView::MAIN:
+    case ACARSMenu::MAIN:
         {
             TextLabel = MainLabels[i];
         } break;
 
-    case ACARSMenuView::HELPER:
+    case ACARSMenu::HELPER:
         {
             TextLabel = SecondLabels[i];
         } break;
@@ -149,7 +149,7 @@ void ACARSMenuView::setTextWithFormat(QString *Text, QString *Position, LINE lab
 
     QPalette p = TextLabel->palette();
 
-    if (color == ACARSMenuView::AMBER)
+    if (color == ACARSMenu::AMBER)
     {
         p.setColor(QPalette::WindowText, QColor(216,117,118));
     } else {
@@ -160,25 +160,4 @@ void ACARSMenuView::setTextWithFormat(QString *Text, QString *Position, LINE lab
 
     this->setText(Text,Position,label);
 
-}
-
-void ACARSMenuView::handleEvent(ACARSInputEvent *pIEvent)
-{
-    switch (pIEvent->getEventType())
-    {
-    case ACARSInputEvent::LSK:
-{
-        QString *InText = new QString(m_pInputLine->text());
-        this->setText(InText,pIEvent->getInputValue(), ACARSMenuView::MAIN);
-        m_pInputLine->clear();
-}
-        break;
-    default:
-        break;
-    }
-}
-
-void ACARSMenuView::updateFSData(ACARSFlightSimData *pNewData)
-{
-    m_pFSData = pNewData;
 }

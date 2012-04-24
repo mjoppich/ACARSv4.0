@@ -12,9 +12,9 @@ namespace Ui {
 }
 
 class ACARSInputRegistry;
-class ACARSMenuView;
+class ACARSMenu;
 class ACARSInput;
-class ACARSInputEvent;
+class ACARSActionEvent;
 class QTimer;
 
 class ACARSSystem : public QMainWindow
@@ -24,12 +24,12 @@ class ACARSSystem : public QMainWindow
 public:
     explicit ACARSSystem(QWidget *parent = 0);
     void Start();
-    void GetInputEventsQueue(QVector<ACARSInputEvent *> *copyto);
+    void GetInputEventsQueue(QVector<ACARSActionEvent *> *copyto);
     void WriteInputLine(QString *c);
     void ClearInputLine();
     void DelFromInputLine();
 
-    void HandleEvents(ACARSInputEvent* pIEvent);
+    void HandleEvents(ACARSActionEvent* pIEvent);
 
     ~ACARSSystem();
 
@@ -49,10 +49,10 @@ private:
     QTimer* m_pTimer;
     QTime m_LastTime;
 
-    ACARSMenuView* m_pActiveView;
-    ACARSMenuView* m_pMenuViews[12];
+    ACARSMenu* m_pActiveView;
+    ACARSMenu* m_pMenuViews[12];
 
-    QVector<ACARSInputEvent*> m_vInputEvents;
+    QVector<ACARSActionEvent*> m_vInputEvents;
 };
 
 #endif // ACARSMAINWINDOW_H
