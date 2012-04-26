@@ -18,7 +18,9 @@ SOURCES   += main.cpp\
     Core/ACARSSystem.cpp \
     Core/ACARSEvents.cpp \
     Core/ACARSMenuPage.cpp \
-    Core/ACARSMenu.cpp
+    Core/ACARSMenu.cpp \
+    Menus/MENULogin.cpp \
+    Menus/MENUPAGELogin.cpp
 
 HEADERS  +=\
     Core/ACARSInputRegistry.h \
@@ -29,7 +31,9 @@ HEADERS  +=\
     Core/ACARSSystem.h \
     Core/ACARSEvents.h \
     Core/ACARSMenuPage.h \
-    Core/ACARSMenu.h
+    Core/ACARSMenu.h \
+    Menus/MENULogin.h \
+    Menus/MENUPAGELogin.h
 
 FORMS    += Core/ACARSMainWindow.ui
 

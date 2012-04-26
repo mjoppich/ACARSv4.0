@@ -49,7 +49,7 @@ private:
     QTimer* m_pTimer;
     QTime m_LastTime;
 
-    ACARSMenu* m_pActiveView;
+    ACARSMenu* m_pActiveMenu;
     ACARSMenu* m_pMenuViews[12];
 
     QVector<ACARSActionEvent*> m_vInputEvents;

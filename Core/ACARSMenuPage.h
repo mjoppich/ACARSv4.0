@@ -8,18 +8,22 @@
 
 class ACARSMenuPage : public QWidget
 {
-    Q_OBJECT
 
 public:
 
-    explicit ACARSMenuPage(QWidget *parent);
-    ACARSMenuPage(QWidget *parent, int thispage, int pagecount);
+    explicit ACARSMenuPage(QWidget *parent, int iCount, int iNum);
 
     void setText(QString *Text, QString *Position, ACARSMenu::LINE label=ACARSMenu::MAIN);
     void setTextWithFormat(QString *Text, QString *Position, ACARSMenu::LINE label=ACARSMenu::MAIN, ACARSMenu::COLOR color=ACARSMenu::GREEN);
 
-private:
-    QLabel *PlaceHolder;
+    virtual void handleEvent(ACARSActionEvent *pIEvent) = 0;
+    virtual bool init() = 0;
+
+    ~ACARSMenuPage(){}
+
+protected:
+    QLabel* PlaceHolder;
+    QLabel* PageIdentifier;
     QLabel* MainLabels[12];
     QLabel* SecondLabels[12];
 

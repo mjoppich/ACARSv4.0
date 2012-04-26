@@ -1,8 +1,9 @@
 #include "ACARSSystem.h"
-#include <Core/ACARSMenu.h>
 #include <Core/ACARSInputRegistry.h>
 #include <Core/ACARSInput.h>
 #include <Core/ACARSEvents.h>
+
+#include <Menus/MENULogin.h>
 
 
 #include"ui_ACARSMainWindow.h"
@@ -35,7 +36,7 @@ ACARSSystem::ACARSSystem(QWidget *parent) :
     this->resize(oBGImageSize);
 
     mACARSInputLine = new QLineEdit(this);
-    mACARSInputLine->setGeometry(100,325,305,20);
+    mACARSInputLine->setGeometry(100,335,305,20);
     mACARSInputLine->setStyleSheet("border: 0px; background: black;");
     QPalette p = mACARSInputLine->palette();
 
@@ -55,10 +56,11 @@ ACARSSystem::ACARSSystem(QWidget *parent) :
     f.setPixelSize(18);
     mACARSInputLine->setFont(f);
 
-    m_pActiveView = new ACARSMenu(this);
-    m_pActiveView->setInputLine(mACARSInputLine);
-    m_pActiveView->setStyleSheet("QWidget { background-color: black;}");
-    m_pActiveView->move(65,85);
+    m_pActiveMenu = new MENULogin(this);
+    m_pActiveMenu->init();
+    m_pActiveMenu->setInputLine(mACARSInputLine);
+    m_pActiveMenu->setStyleSheet("QWidget { background-color: black;}");
+    m_pActiveMenu->move(65,55);
 
     this->installEventFilter(this);
 
@@ -189,7 +191,7 @@ bool ACARSSystem::SystemLoop()
     }
 
     this->show();
-    m_pActiveView->display();
+    m_pActiveMenu->display();
 
     return true;
 }
@@ -200,12 +202,12 @@ void ACARSSystem::HandleEvents(ACARSActionEvent *pIEvent)
     if (pIEvent->getEventType() != ACARSEVENT::MENU)
     {
 
-        m_pActiveView->handleEvent(pIEvent);
+        m_pActiveMenu->handleEvent(pIEvent);
 
     } else {
         //Make another menu active
     }
 
-    m_pActiveView->show();
+    m_pActiveMenu->show();
 
 }

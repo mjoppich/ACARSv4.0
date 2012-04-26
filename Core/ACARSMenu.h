@@ -2,6 +2,7 @@
 #define ACARSMENUVIEW_H
 
 #include <Core/ACARSInput.h>
+
 #include <FlightSim/ACARSFlightSimData.h>
 
 #include <QWidget>
@@ -14,32 +15,38 @@ class ACARSMenuPage;
 
 class ACARSMenu : public QWidget
 {
-    Q_OBJECT
 
 public:
 
     enum LINE {MAIN, HELPER};
     enum COLOR {AMBER, GREEN};
 
-    explicit ACARSMenu(QWidget *parent);
+    ACARSMenu(QWidget *parent, int pagecount);
 
     void setInputLine(QLineEdit *pInputLine);
 
     void setText(QString *Text, QString *Position, LINE label=ACARSMenu::MAIN);
     void setTextWithFormat(QString *Text, QString *Position, LINE label=ACARSMenu::MAIN, COLOR color=ACARSMenu::GREEN);
 
-    void handleEvent(ACARSActionEvent *pIEvent);
+    virtual void handleEvent(ACARSActionEvent *pIEvent) = 0;
+    virtual bool init() = 0;
+
+
     void updateFSData(ACARSFlightSimData* pNewData);
 
     void display();
 
-private:
+    ~ACARSMenu() {}
+
+protected:
     QLabel *PlaceHolder;
+
+    int m_iPageCount;
 
     QLineEdit *m_pInputLine;
     ACARSFlightSimData* m_pFSData;
 
-    ACARSMenuPage *m_pMenuPages[5];
+    ACARSMenuPage **m_pMenuPages;
     ACARSMenuPage *m_pCurrentMenu;
 
 };
