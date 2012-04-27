@@ -27,6 +27,14 @@ public slots:
 
 };
 
+class ACARSMenuKeyInput : public ACARSInput
+{
+public:
+    ACARSMenuKeyInput() {}
+    ACARSActionEvent* EvaluateClick(QMouseEvent *pEvent);
+    ~ACARSMenuKeyInput() {}
+};
+
 class ACARSLSKinput : public ACARSInput
 {
 public:

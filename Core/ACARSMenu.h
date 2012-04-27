@@ -28,7 +28,7 @@ public:
     void setText(QString *Text, QString *Position, LINE label=ACARSMenu::MAIN);
     void setTextWithFormat(QString *Text, QString *Position, LINE label=ACARSMenu::MAIN, COLOR color=ACARSMenu::GREEN);
 
-    virtual void handleEvent(ACARSActionEvent *pIEvent) = 0;
+    virtual bool handleEvent(ACARSActionEvent *pIEvent) = 0;
     virtual bool init() = 0;
 
 

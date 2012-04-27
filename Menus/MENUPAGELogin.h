@@ -2,6 +2,7 @@
 #define MENUPAGELOGIN_H
 
 #include <Core/ACARSMenuPage.h>
+#include <Core/ACARSSystem.h>
 
 class MENUPAGELogin : public ACARSMenuPage
 {
@@ -10,12 +11,20 @@ public:
         :ACARSMenuPage(parent,iCount,iNum)
     {
 
+        m_bIsLoggedIn = false;
+
     }
 
-    virtual void handleEvent(ACARSActionEvent *pIEvent) {};
+    virtual bool handleEvent(ACARSSystem *pACARSSys, ACARSActionEvent *pIEvent);
     virtual bool init();
 
     ~MENUPAGELogin() {}
+
+private:
+    bool evaluateLogin(QString username, QString password);
+    QString getUserSession(QString username, QString password);
+
+    bool m_bIsLoggedIn;
 
 };
 

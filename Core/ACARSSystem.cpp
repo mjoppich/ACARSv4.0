@@ -2,6 +2,7 @@
 #include <Core/ACARSInputRegistry.h>
 #include <Core/ACARSInput.h>
 #include <Core/ACARSEvents.h>
+#include <Core/ACARSUser.h>
 
 #include <Menus/MENULogin.h>
 
@@ -16,6 +17,9 @@
 #include <QPalette>
 #include <QCursor>
 
+const char *ACARSSystem::ACARSFontName = "Lucida Console";
+const char *ACARSSystem::ACARSVersion = "4.0.0a";
+
 
 ACARSSystem::ACARSSystem(QWidget *parent) :
     QMainWindow(parent),
@@ -23,13 +27,16 @@ ACARSSystem::ACARSSystem(QWidget *parent) :
 {
     m_pUI->setupUi(this);
 
+    this->setWindowTitle(QString("ACARS ").append(ACARSSystem::ACARSVersion));
+    this->installEventFilter(this);
 
-    this->setWindowTitle("ACARS v4.0");
 
+    //BACKGROUND IMAGE
     QPixmap *pBGImage = new QPixmap("./images/small_744_acars_day.png");
     QSize oBGImageSize = pBGImage->size();
 
 
+    //INPUT LINE
     QPalette* palette = new QPalette();
     palette->setBrush(QPalette::Background,*(new QBrush(*(pBGImage))));
     this->setPalette(*palette);
@@ -46,35 +53,44 @@ ACARSSystem::ACARSSystem(QWidget *parent) :
 
 
     mACARSInputLine->setPalette(p);
-    mACARSInputLine->setText("TestString");
+    mACARSInputLine->setText("");
     mACARSInputLine->activateWindow();
     mACARSInputLine->setContextMenuPolicy(Qt::PreventContextMenu);
     QFont f = mACARSInputLine->font();
     f.setCapitalization(QFont::AllUppercase);
     //f.setBold(true);
-    f.setFamily("Helvetica");
+    f.setFamily(ACARSSystem::ACARSFontName);
     f.setPixelSize(18);
     mACARSInputLine->setFont(f);
 
+
+    //ACARS MENUS
     m_pActiveMenu = new MENULogin(this);
     m_pActiveMenu->init();
     m_pActiveMenu->setInputLine(mACARSInputLine);
     m_pActiveMenu->setStyleSheet("QWidget { background-color: black;}");
     m_pActiveMenu->move(65,55);
 
-    this->installEventFilter(this);
 
+    //USER INPUT REGISTY
     m_pInputRegistry = new ACARSInputRegistry(this);
-
     ACARSVKeyBoardInput* vKeyBoard = new ACARSVKeyBoardInput();
-    ACARSSpecialKeyKeyBInput* MenuInput = new ACARSSpecialKeyKeyBInput();
+    ACARSSpecialKeyKeyBInput* SpecialKeyInput = new ACARSSpecialKeyKeyBInput();
     ACARSLSKinput* LSKInput = new ACARSLSKinput();
+    ACARSMenuKeyInput* MenuInput = new ACARSMenuKeyInput();
     m_pInputRegistry->RegisterInput(vKeyBoard);
-    m_pInputRegistry->RegisterInput(MenuInput);
+    m_pInputRegistry->RegisterInput(SpecialKeyInput);
     m_pInputRegistry->RegisterInput(LSKInput);
+    m_pInputRegistry->RegisterInput(MenuInput);
 
+
+    //TIMER
     m_pTimer = new QTimer();
     connect(m_pTimer, SIGNAL(timeout()),this,SLOT(SystemLoop()));
+
+
+    //USER
+    m_pUser = new ACARSUser("","");
 }
 
 ACARSSystem::~ACARSSystem()
@@ -103,8 +119,8 @@ bool ACARSSystem::eventFilter(QObject *pObj, QEvent *pEvent)
 
     if (pEvent->type() == ACARSEVENT::LOGINEVENT)
     {
-        QString SentString(*(QString*)pObj);
-        qDebug() << SentString << SentString.length();
+        m_pUser = (ACARSUser*) pObj;
+        qDebug() << m_pUser->getUsername() << " logged in";
     }
 
     return false;
@@ -116,6 +132,11 @@ void ACARSSystem::Start()
     this->show();
     m_LastTime = QTime::currentTime();
     m_pTimer->start(10);
+}
+
+bool ACARSSystem::UpdateACARSCheck()
+{
+    return true;
 }
 
 void ACARSSystem::GetInputEventsQueue(QVector<ACARSActionEvent*> *copyto)
@@ -130,7 +151,12 @@ void ACARSSystem::GetInputEventsQueue(QVector<ACARSActionEvent*> *copyto)
     }
 }
 
-void ACARSSystem::WriteInputLine(QString *c)
+void ACARSSystem::setACARSUser(ACARSUser *pUser)
+{
+    m_pACARSUser = pUser;
+}
+
+void ACARSSystem::WriteInputLine(QString c)
 {
     mACARSInputLine->setText(mACARSInputLine->text().append(c));
 }
@@ -169,22 +195,18 @@ bool ACARSSystem::SystemLoop()
              this->WriteInputLine(pCurrentIE->getInputValue());
         }
 
-        this->HandleEvents(pCurrentIE);
-
-        if (pCurrentIE->isEventType(ACARSEVENT::ILINE))
+        if (m_pActiveMenu->handleEvent(pCurrentIE))
         {
-            if (pCurrentIE->getInputValue()->compare("C"))
-                this->ClearInputLine();
 
-            if (pCurrentIE->getInputValue()->compare("D"))
-                this->DelFromInputLine();
-        }
+            //HANDLE MENU CHANGES HERE!
+            qDebug() << "MENU CHANGE!";
 
-        // WORK ADDON EVENTS - ONLY EVERY 1000ms
-        if (m_LastTime.msecsTo(QTime::currentTime()) < 0)
-        {
-            m_LastTime = QTime::currentTime();
-            m_LastTime.addMSecs(1000);
+            // WORK ADDON EVENTS - ONLY EVERY 1000ms and if allowed
+            if (m_LastTime.msecsTo(QTime::currentTime()) < 0)
+            {
+                m_LastTime = QTime::currentTime();
+                m_LastTime.addMSecs(1000);
+            }
         }
 
         pInputQueue.erase(pInputQueue.begin());

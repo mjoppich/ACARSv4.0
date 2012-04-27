@@ -2,6 +2,114 @@
 #include <Core/ACARSEvents.h>
 
 
+//----------------------------------------------------------
+
+ACARSActionEvent* ACARSMenuKeyInput::EvaluateClick(QMouseEvent *pEvent)
+{
+    int ClickX, ClickY;
+    ClickX = pEvent->x();
+    ClickY = pEvent->y();
+
+    if ((ClickY < 420) && (ClickY > 375))
+    {
+
+        if ((ClickX < 110) && (ClickX > 50))
+        {
+            return new ACARSActionEvent(ACARSEVENT::MENU, "INIT");
+        }
+
+        if ((ClickX < 175) && (ClickX > 115))
+        {
+            return new ACARSActionEvent(ACARSEVENT::MENU, "RTE");
+        }
+
+        if ((ClickX < 240) && (ClickX > 180))
+        {
+            return new ACARSActionEvent(ACARSEVENT::MENU, "DEPARR");
+        }
+
+        if ((ClickX < 305) && (ClickX > 245))
+        {
+            return new ACARSActionEvent(ACARSEVENT::MENU, "ATC");
+        }
+
+        if ((ClickX < 370) && (ClickX > 310))
+        {
+            return new ACARSActionEvent(ACARSEVENT::MENU, "VNAV");
+        }
+
+    }
+
+    if ((ClickY < 470) && (ClickY > 425))
+    {
+
+
+        if ((ClickX < 110) && (ClickX > 50))
+        {
+            return new ACARSActionEvent(ACARSEVENT::MENU, "FIX");
+        }
+
+        if ((ClickX < 175) && (ClickX > 115))
+        {
+            return new ACARSActionEvent(ACARSEVENT::MENU, "LEGS");
+        }
+
+        if ((ClickX < 240) && (ClickX > 180))
+        {
+            return new ACARSActionEvent(ACARSEVENT::MENU, "HOLD");
+        }
+
+        if ((ClickX < 305) && (ClickX > 245))
+        {
+            return new ACARSActionEvent(ACARSEVENT::MENU, "FMCCOMM");
+        }
+
+        if ((ClickX < 370) && (ClickX > 310))
+        {
+            return new ACARSActionEvent(ACARSEVENT::MENU, "PROG");
+        }
+
+
+        if ((ClickX < 440) && (ClickX > 390))
+        {
+            return new ACARSActionEvent(ACARSEVENT::MENU, "EXEC");
+        }
+
+    }
+
+    if ((ClickY < 515) && (ClickY > 475))
+    {
+
+        if ((ClickX < 110) && (ClickX > 50))
+        {
+            return new ACARSActionEvent(ACARSEVENT::MENU, "MENU");
+        }
+
+        if ((ClickX < 175) && (ClickX > 115))
+        {
+            return new ACARSActionEvent(ACARSEVENT::MENU, "NAVRAD");
+        }
+
+    }
+
+    if ((ClickY < 565) && (ClickY > 525))
+    {
+
+        if ((ClickX < 110) && (ClickX > 50))
+        {
+            return new ACARSActionEvent(ACARSEVENT::MENU, "PREV");
+        }
+
+        if ((ClickX < 175) && (ClickX > 115))
+        {
+            return new ACARSActionEvent(ACARSEVENT::MENU, "NEXT");
+        }
+
+    }
+
+
+    return NULL;
+}
 
 //----------------------------------------------------------
 
@@ -72,6 +180,16 @@ ACARSActionEvent* ACARSSpecialKeyKeyBInput::EvaluateClick(QMouseEvent *pEvent)
         if ((ClickX < 445) && (ClickX > 405))
         {
             return new ACARSActionEvent(ACARSEVENT::ILINE, "C");
+        }
+
+    }
+
+    if ((ClickY < 470) && (ClickY > 430))
+    {
+
+        if ((ClickX < 440) && (ClickX > 390))
+        {
+            return new ACARSActionEvent(ACARSEVENT::ILINE, "E");
         }
 
     }

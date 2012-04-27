@@ -1,5 +1,14 @@
 #include "ACARSUser.h"
 
-ACARSUser::ACARSUser()
+
+ACARSUser::ACARSUser(QString pUsername, QString pUserSession)
+    : mUsername(pUsername),
+      mUserSession(pUserSession)
 {
+}
+
+
+QString ACARSUser::getUsername()
+{
+    return mUsername;
 }

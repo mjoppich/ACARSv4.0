@@ -19,7 +19,7 @@ public:
     ACARSEVENT::TYPE getEventType();
 
     bool isEventType(ACARSEVENT::TYPE compareto);
-    QString* getInputValue();
+    QString getInputValue();
 
 private:
     ACARSEVENT::TYPE mEventType;
@@ -29,8 +29,8 @@ private:
 class ACARSMenuViewEvent : public QEvent
 {
   public:
-    ACARSMenuViewEvent()
-        : QEvent((QEvent::Type) ACARSEVENT::LOGINEVENT)
+    ACARSMenuViewEvent(ACARSEVENT::TYPE eEventType)
+        : QEvent((QEvent::Type) eEventType)
     {}
     ~ACARSMenuViewEvent(){}
 };

@@ -19,6 +19,11 @@ ACARSMenu::ACARSMenu(QWidget *parent, int pagecount)
 void ACARSMenu::setInputLine(QLineEdit *pInputLine)
 {
     m_pInputLine = pInputLine;
+
+    int i;
+
+    for (i=0; i<m_iPageCount; ++i)
+        m_pMenuPages[i]->setInputLine(pInputLine);
 }
 
 void ACARSMenu::setText(QString *Text, QString *Position, ACARSMenu::LINE label)

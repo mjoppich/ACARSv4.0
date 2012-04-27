@@ -1,29 +1,13 @@
 #include "MENULogin.h"
 
-void MENULogin::handleEvent(ACARSActionEvent *pIEvent)
+bool MENULogin::handleEvent(ACARSActionEvent *pIEvent)
 {
-    switch (pIEvent->getEventType())
-    {
-    case ACARSEVENT::LSK:
-        {
-        QString *InText = new QString(m_pInputLine->text());
-        m_pCurrentMenu->setText(InText,pIEvent->getInputValue(), ACARSMenu::MAIN);
-        m_pInputLine->clear();
-        }
-        break;
-    case ACARSEVENT::ILINE:
-    {
-        QString* SendString = new QString();
-        SendString->append("Test");
-        this->parent()->eventFilter((QObject*) SendString,new ACARSMenuViewEvent());
-    }
-        break;
 
-    default:
-        break;
-    }
+    bool heresult = m_pCurrentMenu->handleEvent((ACARSSystem*)this->parent(),pIEvent);
 
     m_pCurrentMenu->show();
+
+    return heresult;
 }
 
 bool MENULogin::init()

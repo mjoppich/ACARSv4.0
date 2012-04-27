@@ -1,4 +1,5 @@
 #include "ACARSMenuPage.h"
+#include <Core/ACARSSystem.h>
 
 #include <QDebug>
 
@@ -17,14 +18,14 @@ ACARSMenuPage::ACARSMenuPage(QWidget *parent, int iCount, int iNum)
     QString PIString;
     PIString.clear();
     PIString.append(QString::number(iCount));
-    PIString.append(" / ");
+    PIString.append("/");
     PIString.append(QString::number(iNum));
 
     PageIdentifier->setText(PIString);
 
     QFont PIFont = PageIdentifier->font();
     PIFont.setCapitalization(QFont::AllUppercase);
-    PIFont.setFamily("Helvetica");
+    PIFont.setFamily(ACARSSystem::ACARSFontName);
     PIFont.setPixelSize(16);
 
     QPalette pip = PageIdentifier->palette();
@@ -46,7 +47,7 @@ ACARSMenuPage::ACARSMenuPage(QWidget *parent, int iCount, int iNum)
 
         QFont MainFont = MainLabels[i]->font();
         MainFont.setCapitalization(QFont::AllUppercase);
-        MainFont.setFamily("Helvetica");
+        MainFont.setFamily(ACARSSystem::ACARSFontName);
         MainFont.setPixelSize(16);
 
         if (i % 2 == 0)
@@ -78,7 +79,7 @@ ACARSMenuPage::ACARSMenuPage(QWidget *parent, int iCount, int iNum)
 
         QFont MainFont = SecondLabels[i]->font();
         MainFont.setCapitalization(QFont::AllUppercase);
-        MainFont.setFamily("Helvetica");
+        MainFont.setFamily(ACARSSystem::ACARSFontName);
         MainFont.setPixelSize(12);
 
         if (i % 2 == 0)
@@ -134,6 +135,36 @@ void ACARSMenuPage::setText(QString *Text, QString *Position, ACARSMenu::LINE la
 
 }
 
+void ACARSMenuPage::setText(QString Text, QString Position, ACARSMenu::LINE label)
+{
+
+    int i = 0;
+    if (Position.at(0) == 'L')
+    {
+        i = (Position.right(1).toInt()-1)*2;
+    } else {
+
+        i = (Position.right(1).toInt()-1)*2+1;
+    }
+
+    switch (label)
+    {
+    case ACARSMenu::MAIN:
+        {
+            MainLabels[i]->setText(Text);
+        } break;
+
+    case ACARSMenu::HELPER:
+        {
+            SecondLabels[i]->setText(Text);
+        } break;
+
+    default:
+        break;
+    }
+
+}
+
 void ACARSMenuPage::setTextWithFormat(QString *Text, QString *Position, ACARSMenu::LINE label, ACARSMenu::COLOR color)
 {
 
@@ -178,4 +209,83 @@ void ACARSMenuPage::setTextWithFormat(QString *Text, QString *Position, ACARSMen
 
     this->setText(Text,Position,label);
 
+}
+
+void ACARSMenuPage::setTextWithFormat(QString Text, QString Position, ACARSMenu::LINE label, ACARSMenu::COLOR color)
+{
+
+    int i = 0;
+    if (Position.at(0) == 'L')
+    {
+        i = (Position.left(1).toInt()-1)*2;
+    } else {
+
+        i = (Position.left(1).toInt()-1)*2+1;
+    }
+
+    QLabel *TextLabel;
+
+    switch (label)
+    {
+    case ACARSMenu::MAIN:
+        {
+            TextLabel = MainLabels[i];
+        } break;
+
+    case ACARSMenu::HELPER:
+        {
+            TextLabel = SecondLabels[i];
+        } break;
+
+    default:
+        break;
+    }
+
+
+    QPalette p = TextLabel->palette();
+
+    if (color == ACARSMenu::AMBER)
+    {
+        p.setColor(QPalette::WindowText, QColor(216,117,118));
+    } else {
+        p.setColor(QPalette::WindowText, QColor(117,216,118));
+    }
+
+    TextLabel->setPalette(p);
+
+    this->setText(Text,Position,label);
+
+}
+
+QString ACARSMenuPage::getText(QString Position)
+{
+    int i = 0;
+    if (Position.at(0) == 'L')
+    {
+        i = (Position.at(1).digitValue()-1)*2;
+    } else {
+
+        i = (Position.at(1).digitValue()-1)*2+1;
+    }
+
+    return MainLabels[i]->text();
+}
+
+QString* ACARSMenuPage::getText(QString *Position)
+{
+    int i = 0;
+    if (Position->at(0) == 'L')
+    {
+        i = (Position->at(1).digitValue()-1)*2;
+    } else {
+
+        i = (Position->at(1).digitValue()-1)*2+1;
+    }
+
+    return new QString(MainLabels[i]->text());
+}
+
+void ACARSMenuPage::setInputLine(QLineEdit *pInputLine)
+{
+    m_pInputLine = pInputLine;
 }

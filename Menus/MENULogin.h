@@ -14,7 +14,7 @@ public:
     {
     }
 
-    virtual void handleEvent(ACARSActionEvent *pIEvent);
+    virtual bool handleEvent(ACARSActionEvent *pIEvent);
     virtual bool init();
 
     ~MENULogin() {}

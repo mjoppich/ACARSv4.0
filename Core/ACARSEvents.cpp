@@ -6,9 +6,9 @@ ACARSActionEvent::ACARSActionEvent(ACARSEVENT::TYPE type, QString input)
     mEventType = type;
 }
 
-QString *ACARSActionEvent::getInputValue()
+QString ACARSActionEvent::getInputValue()
 {
-    return &mInput;
+    return mInput;
 }
 
 bool ACARSActionEvent::isEventType(ACARSEVENT::TYPE compareto)

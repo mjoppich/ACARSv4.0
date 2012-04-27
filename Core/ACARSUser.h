@@ -1,10 +1,21 @@
 #ifndef ACARSUSER_H
 #define ACARSUSER_H
 
-class ACARSUser
+#include <QString>
+#include <QObject>
+
+class ACARSUser : public QObject
 {
 public:
-    ACARSUser();
+    ACARSUser(QString pUsername, QString pUserSession);
+
+    QString getUsername();
+
+    ~ACARSUser() {}
+
+private:
+    QString mUsername;
+    QString mUserSession;
 };
 
 #endif // ACARSUSER_H
