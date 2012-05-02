@@ -150,6 +150,160 @@ ACARSActionEvent* ACARSVKeyBoardInput::EvaluateClick(QMouseEvent *pEvent)
             return new ACARSActionEvent(ACARSEVENT::VKEY,"E");
         }
 
+        //undef
+        return NULL;
+
+    }
+
+    //Evaluate first row_ F G H I J
+    if ((ClickY < 570) && (ClickY > 530))
+    {
+
+        if ((ClickX < 245) && (ClickX > 205))
+        {
+            return new ACARSActionEvent(ACARSEVENT::VKEY,"F");
+        }
+
+        if ((ClickX < 295) && (ClickX > 255))
+        {
+            return new ACARSActionEvent(ACARSEVENT::VKEY,"G");
+        }
+
+        if ((ClickX < 345) && (ClickX > 305))
+        {
+            return new ACARSActionEvent(ACARSEVENT::VKEY,"H");
+        }
+
+        if ((ClickX < 395) && (ClickX > 355))
+        {
+            return new ACARSActionEvent(ACARSEVENT::VKEY,"I");
+        }
+
+        if ((ClickX < 445) && (ClickX > 405))
+        {
+            return new ACARSActionEvent(ACARSEVENT::VKEY,"J");
+        }
+
+        //undef
+        return NULL;
+
+    }
+
+    //Evaluate first row_ K L M N O
+    if ((ClickY < 620) && (ClickY > 580))
+    {
+
+        if ((ClickX < 245) && (ClickX > 205))
+        {
+            return new ACARSActionEvent(ACARSEVENT::VKEY,"K");
+        }
+
+        if ((ClickX < 295) && (ClickX > 255))
+        {
+            return new ACARSActionEvent(ACARSEVENT::VKEY,"L");
+        }
+
+        if ((ClickX < 345) && (ClickX > 305))
+        {
+            return new ACARSActionEvent(ACARSEVENT::VKEY,"M");
+        }
+
+        if ((ClickX < 395) && (ClickX > 355))
+        {
+            return new ACARSActionEvent(ACARSEVENT::VKEY,"N");
+        }
+
+        if ((ClickX < 445) && (ClickX > 405))
+        {
+            return new ACARSActionEvent(ACARSEVENT::VKEY,"O");
+        }
+
+        //undef
+        return NULL;
+
+    }
+
+    //Evaluate first row_ P Q R S T
+    if ((ClickY < 670) && (ClickY > 630))
+    {
+
+        if ((ClickX < 245) && (ClickX > 205))
+        {
+            return new ACARSActionEvent(ACARSEVENT::VKEY,"P");
+        }
+
+        if ((ClickX < 295) && (ClickX > 255))
+        {
+            return new ACARSActionEvent(ACARSEVENT::VKEY,"Q");
+        }
+
+        if ((ClickX < 345) && (ClickX > 305))
+        {
+            return new ACARSActionEvent(ACARSEVENT::VKEY,"R");
+        }
+
+        if ((ClickX < 395) && (ClickX > 355))
+        {
+            return new ACARSActionEvent(ACARSEVENT::VKEY,"S");
+        }
+
+        if ((ClickX < 445) && (ClickX > 405))
+        {
+            return new ACARSActionEvent(ACARSEVENT::VKEY,"T");
+        }
+
+        //undef
+        return NULL;
+
+    }
+
+    //Evaluate first row_ U V W X Y
+    if ((ClickY < 720) && (ClickY > 680))
+    {
+
+        if ((ClickX < 245) && (ClickX > 205))
+        {
+            return new ACARSActionEvent(ACARSEVENT::VKEY,"U");
+        }
+
+        if ((ClickX < 295) && (ClickX > 255))
+        {
+            return new ACARSActionEvent(ACARSEVENT::VKEY,"V");
+        }
+
+        if ((ClickX < 345) && (ClickX > 305))
+        {
+            return new ACARSActionEvent(ACARSEVENT::VKEY,"W");
+        }
+
+        if ((ClickX < 395) && (ClickX > 355))
+        {
+            return new ACARSActionEvent(ACARSEVENT::VKEY,"X");
+        }
+
+        if ((ClickX < 445) && (ClickX > 405))
+        {
+            return new ACARSActionEvent(ACARSEVENT::VKEY,"Y");
+        }
+
+        //undef
+        return NULL;
+
+    }
+
+    //Evaluate first row_ Z " "
+    if ((ClickY < 770) && (ClickY > 730))
+    {
+
+        if ((ClickX < 245) && (ClickX > 205))
+        {
+            return new ACARSActionEvent(ACARSEVENT::VKEY,"Z");
+        }
+
+        if ((ClickX < 295) && (ClickX > 255))
+        {
+            return new ACARSActionEvent(ACARSEVENT::VKEY," ");
+        }
 
         //undef
         return NULL;

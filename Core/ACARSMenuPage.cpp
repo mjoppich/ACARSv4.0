@@ -3,6 +3,8 @@
 
 #include <QDebug>
 
+const char *ACARSMenuPage::pCharInputPlaceholder = "_";
+
 ACARSMenuPage::ACARSMenuPage(QWidget *parent, int iCount, int iNum)
     : QWidget(parent)
 {
@@ -151,11 +153,13 @@ void ACARSMenuPage::setText(QString Text, QString Position, ACARSMenu::LINE labe
     {
     case ACARSMenu::MAIN:
         {
+            MainLabels[i]->setStyleSheet("QLabel {color: rgb(117,216,118)}");
             MainLabels[i]->setText(Text);
         } break;
 
     case ACARSMenu::HELPER:
         {
+            SecondLabels[i]->setStyleSheet("QLabel {color: rgb(117,216,118)}");
             SecondLabels[i]->setText(Text);
         } break;
 
@@ -171,10 +175,10 @@ void ACARSMenuPage::setTextWithFormat(QString *Text, QString *Position, ACARSMen
     int i = 0;
     if (Position->at(0) == 'L')
     {
-        i = (Position->left(1).toInt()-1)*2;
+        i = (Position->at(1).digitValue()-1)*2;
     } else {
 
-        i = (Position->left(1).toInt()-1)*2+1;
+        i = (Position->at(1).digitValue()-1)*2+1;
     }
 
     QLabel *TextLabel;
@@ -195,19 +199,9 @@ void ACARSMenuPage::setTextWithFormat(QString *Text, QString *Position, ACARSMen
         break;
     }
 
-
-    QPalette p = TextLabel->palette();
-
-    if (color == ACARSMenu::AMBER)
-    {
-        p.setColor(QPalette::WindowText, QColor(216,117,118));
-    } else {
-        p.setColor(QPalette::WindowText, QColor(117,216,118));
-    }
-
-    TextLabel->setPalette(p);
-
     this->setText(Text,Position,label);
+
+    TextLabel->setStyleSheet(this->getColorString(color));
 
 }
 
@@ -217,10 +211,10 @@ void ACARSMenuPage::setTextWithFormat(QString Text, QString Position, ACARSMenu:
     int i = 0;
     if (Position.at(0) == 'L')
     {
-        i = (Position.left(1).toInt()-1)*2;
+        i = (Position.at(1).digitValue()-1)*2;
     } else {
 
-        i = (Position.left(1).toInt()-1)*2+1;
+        i = (Position.at(1).digitValue()-1)*2+1;
     }
 
     QLabel *TextLabel;
@@ -242,19 +236,8 @@ void ACARSMenuPage::setTextWithFormat(QString Text, QString Position, ACARSMenu:
     }
 
 
-    QPalette p = TextLabel->palette();
-
-    if (color == ACARSMenu::AMBER)
-    {
-        p.setColor(QPalette::WindowText, QColor(216,117,118));
-    } else {
-        p.setColor(QPalette::WindowText, QColor(117,216,118));
-    }
-
-    TextLabel->setPalette(p);
-
     this->setText(Text,Position,label);
-
+    TextLabel->setStyleSheet(this->getColorString(color));
 }
 
 QString ACARSMenuPage::getText(QString Position)
@@ -288,4 +271,41 @@ QString* ACARSMenuPage::getText(QString *Position)
 void ACARSMenuPage::setInputLine(QLineEdit *pInputLine)
 {
     m_pInputLine = pInputLine;
+}
+
+QString ACARSMenuPage::getColorString(ACARSMenu::COLOR color)
+{
+    switch(color)
+    {
+    case ACARSMenu::AMBER: return QString("QLabel {color: rgb(216,117,118)}"); break;
+    case ACARSMenu::GREEN: return QString("QLabel {color: rgb(117,216,118)}"); break;
+    default: return QString("QLabel {color: rgb(100,0,0)}"); break;
+    }
+}
+
+void ACARSMenuPage::setFilledInput(QString *Position, int iChars, ACARSMenu::COLOR color)
+{
+    int i = 0;
+    if (Position->at(0) == 'L')
+    {
+        i = (Position->at(1).digitValue()-1)*2;
+    } else {
+
+        i = (Position->at(1).digitValue()-1)*2+1;
+    }
+
+    QString sPlaceHolder;
+    sPlaceHolder.clear();
+
+    for(i=0; i < iChars; ++i)
+    {
+
+        sPlaceHolder.append(ACARSMenuPage::pCharInputPlaceholder);
+
+    }
+
+    MainLabels[i]->setText(sPlaceHolder);
+    MainLabels[i]->setStyleSheet(this->getColorString(color));
+
+
 }

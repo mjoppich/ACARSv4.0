@@ -88,7 +88,7 @@ bool MENUPAGELogin::init()
 
     this->setText(QString("PLEASE LOGIN:"),QString("L3"),ACARSMenu::MAIN);
 
-    this->setText(QString("Username"),QString("L4"),ACARSMenu::HELPER);
+    this->setTextWithFormat(QString("Username"),QString("L4"),ACARSMenu::HELPER, ACARSMenu::AMBER);
     this->setText(QString("password"),QString("R4"),ACARSMenu::HELPER);
 
     this->setText(QString("-----"),QString("L4"),ACARSMenu::MAIN);

@@ -20,6 +20,8 @@ public:
     void setTextWithFormat(QString *Text, QString *Position, ACARSMenu::LINE label=ACARSMenu::MAIN, ACARSMenu::COLOR color=ACARSMenu::GREEN);
     void setTextWithFormat(QString Text, QString Position, ACARSMenu::LINE label=ACARSMenu::MAIN, ACARSMenu::COLOR color=ACARSMenu::GREEN);
 
+    void setFilledInput(QString *Position, int iChars, ACARSMenu::COLOR color = ACARSMenu::GREEN);
+
     QString getText(QString Position);
     QString* getText(QString* Position);
 
@@ -38,8 +40,12 @@ protected:
 
     QLineEdit* m_pInputLine;
 
+    QString getColorString(ACARSMenu::COLOR color);
+
     int m_iPageCount;
     int m_iPageNum;
+
+    static const char* pCharInputPlaceholder;
 
 };
 
