@@ -1,8 +1,8 @@
-#include "MENUPAGELogin.h"
+#include "MENUPAGEInit2.h"
 
 #include <Core/ACARSUser.h>
 
-bool MENUPAGELogin::evaluateLogin(QString username, QString password)
+bool MENUPAGEInit2::evaluateLogin(QString username, QString password)
 {
     if (username.compare("LH418", Qt::CaseInsensitive) == 0 && password.compare("AAA") == 0)
         return true;
@@ -10,14 +10,14 @@ bool MENUPAGELogin::evaluateLogin(QString username, QString password)
     return false;
 }
 
-QString MENUPAGELogin::getUserSession(QString username, QString password)
+QString MENUPAGEInit2::getUserSession(QString username, QString password)
 {
 
     return QString("UserSession");
 
 }
 
-bool MENUPAGELogin::handleEvent(ACARSSystem* pACARSSys, ACARSActionEvent *pIEvent)
+bool MENUPAGEInit2::handleEvent(ACARSSystem* pACARSSys, ACARSActionEvent *pIEvent)
 {
 
     if (pIEvent->isEventType(ACARSEVENT::MENU))
@@ -70,7 +70,7 @@ bool MENUPAGELogin::handleEvent(ACARSSystem* pACARSSys, ACARSActionEvent *pIEven
 
 }
 
-bool MENUPAGELogin::init()
+bool MENUPAGEInit2::init()
 {
 
     int i;

@@ -12,7 +12,8 @@ ACARSMenu::ACARSMenu(QWidget *parent, int pagecount)
 
     m_iPageCount = pagecount;
 
-    this->setFixedSize(365,260);
+    m_pMenuPages = new QStackedWidget(this);
+    m_pMenuPages->setFixedSize(365,280);
 
 }
 
@@ -22,21 +23,21 @@ void ACARSMenu::setInputLine(QLineEdit *pInputLine)
 
     int i;
 
-    for (i=0; i<m_iPageCount; ++i)
-        m_pMenuPages[i]->setInputLine(pInputLine);
+    for (i=0; i<m_pMenuPages->count(); ++i)
+        ((ACARSMenuPage*)(m_pMenuPages->widget(i)))->setInputLine(pInputLine);
 }
 
 void ACARSMenu::setText(QString *Text, QString *Position, ACARSMenu::LINE label)
 {
 
-    m_pCurrentMenu->setText(Text,Position,label);
+    ((ACARSMenuPage*)(m_pMenuPages->currentWidget()))->setText(Text,Position,label);
 
 }
 
 void ACARSMenu::setTextWithFormat(QString *Text, QString *Position, ACARSMenu::LINE label, ACARSMenu::COLOR color)
 {
 
-    m_pCurrentMenu->setTextWithFormat(Text, Position, label, color);
+    ((ACARSMenuPage*)(m_pMenuPages->currentWidget()))->setTextWithFormat(Text, Position, label, color);
 
 }
 
@@ -45,10 +46,4 @@ void ACARSMenu::setTextWithFormat(QString *Text, QString *Position, ACARSMenu::L
 void ACARSMenu::updateFSData(ACARSFlightSimData *pNewData)
 {
     m_pFSData = pNewData;
-}
-
-void ACARSMenu::display()
-{
-    this->show();
-    m_pCurrentMenu->show();
 }

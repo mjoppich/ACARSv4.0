@@ -5,7 +5,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    ACARSSystem *System = new ACARSSystem();
+    ACARSSystem *System = new ACARSSystem(&a);
     System->Start();
 
     return a.exec();

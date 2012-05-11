@@ -4,8 +4,8 @@
 #include <Core/ACARSEvents.h>
 #include <Core/ACARSUser.h>
 
-#include <Menus/MENULogin.h>
-
+#include <Menus/LOGIN/MENULogin.h>
+#include <Menus/INIT/MENUInit.h>
 
 #include"ui_ACARSMainWindow.h"
 
@@ -16,12 +16,20 @@
 #include <QDebug>
 #include <QPalette>
 #include <QCursor>
+#include <QVBoxLayout>
+#include <QPushButton>
+#include <QPixmap>
+
+#include <QDir>
+#include <QFileDialog>
+
+#include <QStackedWidget>
 
 const char *ACARSSystem::ACARSFontName = "Lucida Console";
 const char *ACARSSystem::ACARSVersion = "4.0.0a";
 
 
-ACARSSystem::ACARSSystem(QWidget *parent) :
+ACARSSystem::ACARSSystem(QApplication *pApp, QWidget *parent):
     QMainWindow(parent),
     m_pUI(new Ui::ACARSMainWindow)
 {
@@ -30,6 +38,7 @@ ACARSSystem::ACARSSystem(QWidget *parent) :
     this->setWindowTitle(QString("ACARS ").append(ACARSSystem::ACARSVersion));
     this->installEventFilter(this);
 
+    m_pParentApp = pApp;
 
     //BACKGROUND IMAGE
     QPixmap *pBGImage = new QPixmap("./images/small_744_acars_day.png");
@@ -63,14 +72,27 @@ ACARSSystem::ACARSSystem(QWidget *parent) :
     f.setPixelSize(18);
     mACARSInputLine->setFont(f);
 
+    QPushButton *pSButton = new QPushButton("S",this);
+    pSButton->resize(20,20);
+    pSButton->move(5,725);
+    connect(pSButton,SIGNAL(clicked()),this,SLOT(saveScreenShot()));
 
-    //ACARS MENUS
-    m_pActiveMenu = new MENULogin(this);
-    m_pActiveMenu->init();
-    m_pActiveMenu->setInputLine(mACARSInputLine);
-    m_pActiveMenu->setStyleSheet("QWidget { background-color: black;}");
-    m_pActiveMenu->move(65,55);
+    m_pViews = new QStackedWidget(this);
+    m_pViews->raise();
+    m_pViews->setFixedSize(365,280);
+    m_pViews->move(70,50);
+    m_pViews->setStyleSheet("QStackedWidget {background-color: green}");
 
+    ACARSMenu* pInit = new MENUInit(m_pViews);
+    pInit->setInputLine(mACARSInputLine);
+    pInit->init();
+    ACARSMenu* pLogin = new MENULogin(m_pViews);
+    pLogin->setInputLine(mACARSInputLine);
+    pLogin->init();
+
+    m_pViews->addWidget(pLogin);
+    m_pViews->addWidget(pInit);
+    m_pViews->setCurrentWidget(pLogin);
 
     //USER INPUT REGISTY
     m_pInputRegistry = new ACARSInputRegistry(this);
@@ -106,6 +128,21 @@ ACARSSystem::~ACARSSystem()
   IMPLEMENTATION
 
   ****************************************************************************/
+
+void ACARSSystem::saveScreenShot()
+{
+
+    QPixmap originalPixmap = QPixmap::grabWindow(this->winId());
+    m_pParentApp->beep();
+
+    QString format = "png";
+    QString initialPath = QDir::currentPath() + tr("/untitled.") + format;
+
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"),initialPath,tr("%1 Files (*.%2);;All Files (*)").arg(format.toUpper()).arg(format));
+    if (!fileName.isEmpty())
+        originalPixmap.save(fileName, format.toAscii());
+
+}
 
 bool ACARSSystem::eventFilter(QObject *pObj, QEvent *pEvent)
 {
@@ -195,11 +232,13 @@ bool ACARSSystem::SystemLoop()
              this->WriteInputLine(pCurrentIE->getInputValue());
         }
 
-        if (m_pActiveMenu->handleEvent(pCurrentIE))
+        if (((ACARSMenu*)m_pViews->currentWidget())->handleEvent(pCurrentIE))
         {
 
             //HANDLE MENU CHANGES HERE!
             qDebug() << "MENU CHANGE!";
+
+            this->HandleEvents(pCurrentIE);
 
             // WORK ADDON EVENTS - ONLY EVERY 1000ms and if allowed
             if (m_LastTime.msecsTo(QTime::currentTime()) < 0)
@@ -212,8 +251,7 @@ bool ACARSSystem::SystemLoop()
         pInputQueue.erase(pInputQueue.begin());
     }
 
-    this->show();
-    m_pActiveMenu->display();
+    m_pViews->show();
 
     return true;
 }
@@ -224,12 +262,16 @@ void ACARSSystem::HandleEvents(ACARSActionEvent *pIEvent)
     if (pIEvent->getEventType() != ACARSEVENT::MENU)
     {
 
-        m_pActiveMenu->handleEvent(pIEvent);
+        ((ACARSMenu*)(m_pViews->currentWidget()))->handleEvent(pIEvent);
 
     } else {
         //Make another menu active
+
+        if (pIEvent->getInputValue() == "INIT")
+            m_pViews->setCurrentIndex(1);
+        else m_pViews->setCurrentIndex(0);
+
     }
 
-    m_pActiveMenu->show();
 
 }

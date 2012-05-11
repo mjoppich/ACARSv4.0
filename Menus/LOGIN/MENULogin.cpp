@@ -3,9 +3,7 @@
 bool MENULogin::handleEvent(ACARSActionEvent *pIEvent)
 {
 
-    bool heresult = m_pCurrentMenu->handleEvent((ACARSSystem*)this->parent(),pIEvent);
-
-    m_pCurrentMenu->show();
+    bool heresult = ((ACARSMenuPage*)(m_pMenuPages->currentWidget()))->handleEvent((ACARSSystem*)this->parent(),pIEvent);
 
     return heresult;
 }
@@ -13,20 +11,16 @@ bool MENULogin::handleEvent(ACARSActionEvent *pIEvent)
 bool MENULogin::init()
 {
 
-    int i;
+    ACARSMenuPage* pPage1 = new MENUPAGELogin((QWidget*)this->parent(),1,m_iPageCount);
 
-    m_pMenuPages = new ACARSMenuPage*[m_iPageCount];
+    pPage1->setStyleSheet("QWidget { background-color: black;}");
+    pPage1->setInputLine(m_pInputLine);
+    pPage1->init();
 
-    for (i=0; i<m_iPageCount; ++i)
-    {
-        m_pMenuPages[i] = (ACARSMenuPage*)new MENUPAGELogin((QWidget*)this->parent(),i+1,m_iPageCount);
-        m_pMenuPages[i]->setStyleSheet("QWidget { background-color: black;}");
-        m_pMenuPages[i]->move(65,50);
-        m_pMenuPages[i]->init();
-    }
+    m_pMenuPages->addWidget(pPage1);
 
-    m_pCurrentMenu = m_pMenuPages[0];
-    m_pCurrentMenu->raise();
+    m_pMenuPages->setCurrentIndex(1);
+    m_pMenuPages->activateWindow();
 
     return true;
 }

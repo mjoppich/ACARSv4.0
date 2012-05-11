@@ -1,15 +1,16 @@
-#ifndef MENULOGIN_H
-#define MENULOGIN_H
+#ifndef MENUINIT_H
+#define MENUINIT_H
 
 #include <Core/ACARSMenu.h>
 
-#include <Menus/MENUPAGELogin.h>
+#include <Menus/INIT/MENUPAGEInit1.h>
+#include <Menus/INIT/MENUPAGEInit2.h>
 
-class MENULogin : public ACARSMenu
+class MENUInit : public ACARSMenu
 {
 public:
 
-    MENULogin(QWidget *parent)
+    MENUInit(QWidget *parent)
         : ACARSMenu(parent,1)
     {
     }
@@ -17,8 +18,8 @@ public:
     virtual bool handleEvent(ACARSActionEvent *pIEvent);
     virtual bool init();
 
-    ~MENULogin() {}
+    ~MENUInit() {}
 
 };
 
-#endif // MENULOGIN_H
+#endif // MENUINIT_H

@@ -1,13 +1,13 @@
-#ifndef MENUPAGELOGIN_H
-#define MENUPAGELOGIN_H
+#ifndef MENUPAGEINIT2_H
+#define MENUPAGEINIT2_H
 
 #include <Core/ACARSMenuPage.h>
 #include <Core/ACARSSystem.h>
 
-class MENUPAGELogin : public ACARSMenuPage
+class MENUPAGEInit2 : public ACARSMenuPage
 {
 public:
-    MENUPAGELogin(QWidget *parent, int iCount, int iNum)
+    MENUPAGEInit2(QWidget *parent, int iCount, int iNum)
         :ACARSMenuPage(parent,iCount,iNum)
     {
 
@@ -18,7 +18,7 @@ public:
     virtual bool handleEvent(ACARSSystem *pACARSSys, ACARSActionEvent *pIEvent);
     virtual bool init();
 
-    ~MENUPAGELogin() {}
+    ~MENUPAGEInit2() {}
 
 private:
     bool evaluateLogin(QString username, QString password);
@@ -28,4 +28,4 @@ private:
 
 };
 
-#endif // MENUPAGELOGIN_H
+#endif // MENUPAGEINIT2_H

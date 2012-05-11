@@ -14,15 +14,17 @@
    <string>ACARSMainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QWidget" name="widget" native="true">
+   <widget class="QStackedWidget" name="stackedWidget">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>90</y>
-      <width>120</width>
-      <height>80</height>
+      <x>40</x>
+      <y>50</y>
+      <width>291</width>
+      <height>181</height>
      </rect>
     </property>
+    <widget class="QWidget" name="page"/>
+    <widget class="QWidget" name="page_2"/>
    </widget>
   </widget>
  </widget>

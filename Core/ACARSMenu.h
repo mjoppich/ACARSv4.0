@@ -9,6 +9,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QEvent>
+#include <QStackedWidget>
 
 class ACARSActionEvent;
 class ACARSMenuPage;
@@ -34,8 +35,6 @@ public:
 
     void updateFSData(ACARSFlightSimData* pNewData);
 
-    void display();
-
     ~ACARSMenu() {}
 
 protected:
@@ -46,7 +45,7 @@ protected:
     QLineEdit *m_pInputLine;
     ACARSFlightSimData* m_pFSData;
 
-    ACARSMenuPage **m_pMenuPages;
+    QStackedWidget *m_pMenuPages;
     ACARSMenuPage *m_pCurrentMenu;
 
 };

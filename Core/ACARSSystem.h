@@ -15,6 +15,8 @@ class ACARSInput;
 class ACARSActionEvent;
 class QTimer;
 class ACARSUser;
+class QStackedWidget;
+class QApplication;
 
 class ACARSSystem : public QMainWindow
 {
@@ -23,7 +25,7 @@ class ACARSSystem : public QMainWindow
 public:
 
     //ACARS SYSTEM
-    explicit ACARSSystem(QWidget *parent = 0);
+    explicit ACARSSystem(QApplication *pApp, QWidget *parent = 0);
     void Start();
     bool UpdateACARSCheck();
 
@@ -51,6 +53,7 @@ public:
 
 private slots:
     bool SystemLoop();
+    void saveScreenShot();
 
 private:
 
@@ -65,8 +68,11 @@ private:
 
     ACARSMenu* m_pActiveMenu;
     ACARSMenu* m_pMenuViews[12];
+    QStackedWidget* m_pViews;
 
     ACARSUser* m_pACARSUser;
+
+    QApplication* m_pParentApp;
 
     QVector<ACARSActionEvent*> m_vInputEvents;
 };
