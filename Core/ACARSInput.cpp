@@ -97,12 +97,12 @@ ACARSActionEvent* ACARSMenuKeyInput::EvaluateClick(QMouseEvent *pEvent)
 
         if ((ClickX < 110) && (ClickX > 50))
         {
-            return new ACARSActionEvent(ACARSEVENT::MENU, "PREV");
+            return new ACARSActionEvent(ACARSEVENT::MENU, "NEXT");
         }
 
         if ((ClickX < 175) && (ClickX > 115))
         {
-            return new ACARSActionEvent(ACARSEVENT::MENU, "NEXT");
+            return new ACARSActionEvent(ACARSEVENT::MENU, "PREV");
         }
 
     }

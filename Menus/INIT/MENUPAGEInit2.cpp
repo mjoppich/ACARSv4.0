@@ -22,20 +22,14 @@ bool MENUPAGEInit2::handleEvent(ACARSSystem* pACARSSys, ACARSActionEvent *pIEven
 
     if (pIEvent->isEventType(ACARSEVENT::MENU))
     {
-        if (pIEvent->getInputValue().compare("EXEC") == 0)
+        if (pIEvent->getInputValue().compare("PREV") == 0)
         {
-            if (this->evaluateLogin(this->getText("L4"),this->getText("R4")))
-            {
-                m_bIsLoggedIn = true;
 
-                qDebug() << "logged in";
-
-                QString sUserSession = this->getUserSession(this->getText("L4"),this->getText("R4"));
-
-                pACARSSys->eventFilter((QObject*) new ACARSUser(this->getText("L4"),sUserSession),new ACARSMenuViewEvent(ACARSEVENT::LOGINEVENT));
-            }
+            //NOTHING TO HAPPEN HERE!
+			return true;
         }
     }
+
 
     if (pIEvent->isEventType(ACARSEVENT::ILINE))
     {
@@ -62,9 +56,6 @@ bool MENUPAGEInit2::handleEvent(ACARSSystem* pACARSSys, ACARSActionEvent *pIEven
         m_pInputLine->clear();
     }
 
-    //not allowed to leave this menu :)
-    if (!m_bIsLoggedIn)
-        return false;
 
     return true;
 

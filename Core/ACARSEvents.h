@@ -7,7 +7,7 @@
 namespace ACARSEVENT
 {
     enum TYPE {LSK=0, MOUSE, MENU, VKEY, ILINE, //ACARSInputEvents
-               LOGINEVENT=1000}; //CUSTOM EVENTS
+               LOGINEVENT=1000, MESSAGEEVENT}; //CUSTOM EVENTS
 }
 
 class ACARSActionEvent

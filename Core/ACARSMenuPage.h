@@ -32,11 +32,18 @@ public:
 
     ~ACARSMenuPage(){}
 
+    int getLSKIndex(QString sEntry);
 protected:
+
+    void resetEntry(QString sEntry);
+	bool changedEntry(QString sEntry);
+
     QLabel* PlaceHolder;
     QLabel* PageIdentifier;
     QLabel* MainLabels[12];
     QLabel* SecondLabels[12];
+
+	QString mDefaultEntries[12];
 
     QLineEdit* m_pInputLine;
 

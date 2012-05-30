@@ -15,7 +15,6 @@ public:
     {
     }
 
-    virtual bool handleEvent(ACARSActionEvent *pIEvent);
     virtual bool init();
 
     ~MENUInit() {}

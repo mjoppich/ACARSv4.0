@@ -4,7 +4,7 @@
 
 bool MENUPAGELogin::evaluateLogin(QString username, QString password)
 {
-    if (username.compare("LH418", Qt::CaseInsensitive) == 0 && password.compare("AAA") == 0)
+    if (username.compare("-----", Qt::CaseInsensitive) == 0 && password.compare("-----") == 0)
         return true;
 
     return false;
@@ -22,6 +22,9 @@ bool MENUPAGELogin::handleEvent(ACARSSystem* pACARSSys, ACARSActionEvent *pIEven
 
     if (pIEvent->isEventType(ACARSEVENT::MENU))
     {
+
+		// ADD YOUR CUSTOM ACTIONS HERE
+
         if (pIEvent->getInputValue().compare("EXEC") == 0)
         {
             if (this->evaluateLogin(this->getText("L4"),this->getText("R4")))
@@ -34,10 +37,16 @@ bool MENUPAGELogin::handleEvent(ACARSSystem* pACARSSys, ACARSActionEvent *pIEven
 
                 pACARSSys->eventFilter((QObject*) new ACARSUser(this->getText("L4"),sUserSession),new ACARSMenuViewEvent(ACARSEVENT::LOGINEVENT));
             }
+
+
+			pACARSSys->eventFilter((QObject*) new QString("TestMessage"),new ACARSMenuViewEvent(ACARSEVENT::MESSAGEEVENT));
         }
     }
 
-    if (pIEvent->isEventType(ACARSEVENT::ILINE))
+
+	// DO NOT CHANGE THIS WITHOUT REASON
+	
+	if (pIEvent->isEventType(ACARSEVENT::ILINE))
     {
         if (pIEvent->getInputValue().compare("C") == 0)
         {
@@ -46,7 +55,7 @@ bool MENUPAGELogin::handleEvent(ACARSSystem* pACARSSys, ACARSActionEvent *pIEven
 
         if (pIEvent->getInputValue().compare("D") == 0)
         {
-            if (m_pInputLine->text() != "")
+			if (m_pInputLine->text().compare(""))
             {
                 pACARSSys->DelFromInputLine();
             } else {
@@ -58,8 +67,17 @@ bool MENUPAGELogin::handleEvent(ACARSSystem* pACARSSys, ACARSActionEvent *pIEven
 
     if (pIEvent->isEventType(ACARSEVENT::LSK))
     {
-        this->setText(m_pInputLine->text(), ((ACARSActionEvent*) pIEvent)->getInputValue());
-        m_pInputLine->clear();
+		if (m_pInputLine->text().length() > 0)
+		{
+			if ((pACARSSys->getInputLineText().compare("D") == 0) && this->changedEntry(((ACARSActionEvent*) pIEvent)->getInputValue()))
+			{
+				this->resetEntry(((ACARSActionEvent*) pIEvent)->getInputValue());
+				m_pInputLine->clear();
+			} else {
+				this->setText(m_pInputLine->text(), ((ACARSActionEvent*) pIEvent)->getInputValue());
+				m_pInputLine->clear();
+			}
+		}
     }
 
     //not allowed to leave this menu :)
@@ -75,27 +93,29 @@ bool MENUPAGELogin::init()
 
     int i;
 
+
+	for (i=0; i < 12; ++i)
+	{
+		mDefaultEntries[i] = "";
+	}
+	
+	mDefaultEntries[2] = "ACARS 4.0 alpha";
+	mDefaultEntries[6] = "-----";
+	mDefaultEntries[7] = "-----";
+	mDefaultEntries[10] = "EXEC TO LOGIN";
+
     for(i=0; i<12; ++i)
     {
 
-        MainLabels[i]->setText("");
+        MainLabels[i]->setText(mDefaultEntries[i]);
         SecondLabels[i]->setText("");
 
     }
 
     this->setText(QString("Welcome to"),QString("L2"),ACARSMenu::HELPER);
-    this->setText(QString("ACARS 4.0 alpha"),QString("L2"),ACARSMenu::MAIN);
-
-    this->setText(QString("PLEASE LOGIN:"),QString("L3"),ACARSMenu::MAIN);
-
-    this->setTextWithFormat(QString("Username"),QString("L4"),ACARSMenu::HELPER, ACARSMenu::AMBER);
+	this->setTextWithFormat(QString("PLEASE LOGIN"),QString("L3"),ACARSMenu::HELPER, ACARSMenu::AMBER);
+    this->setTextWithFormat(QString("Username"),QString("L4"),ACARSMenu::HELPER);
     this->setText(QString("password"),QString("R4"),ACARSMenu::HELPER);
-
-    this->setText(QString("-----"),QString("L4"),ACARSMenu::MAIN);
-
-
-
-    this->setText(QString("EXEC TO LOGIN"),QString("L6"),ACARSMenu::MAIN);
 
     return true;
 

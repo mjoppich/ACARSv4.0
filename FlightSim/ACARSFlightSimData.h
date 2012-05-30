@@ -1,10 +1,14 @@
 #ifndef ACARSFLIGHTSIMDATA_H
 #define ACARSFLIGHTSIMDATA_H
 
-class ACARSFlightSimData
+#include <QObject>
+
+class ACARSFlightSimData : public QObject
 {
+	Q_OBJECT
+
 public:
-    ACARSFlightSimData();
+	explicit ACARSFlightSimData(QObject *pParent);
 };
 
 #endif // ACARSFLIGHTSIMDATA_H

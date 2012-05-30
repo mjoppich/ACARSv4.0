@@ -21,6 +21,7 @@ public:
     ~MENUPAGELogin() {}
 
 private:
+
     bool evaluateLogin(QString username, QString password);
     QString getUserSession(QString username, QString password);
 

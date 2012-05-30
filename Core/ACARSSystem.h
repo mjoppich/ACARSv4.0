@@ -17,6 +17,8 @@ class QTimer;
 class ACARSUser;
 class QStackedWidget;
 class QApplication;
+class XPlaneFlightSimData;
+class ACARSFlightSimData;
 
 class ACARSSystem : public QMainWindow
 {
@@ -37,6 +39,7 @@ public:
     void WriteInputLine(QString c);
     void ClearInputLine();
     void DelFromInputLine();
+	QString getInputLineText();
 
     //EVENTS
     void HandleEvents(ACARSActionEvent* pIEvent);
@@ -58,7 +61,7 @@ private slots:
 private:
 
     Ui::ACARSMainWindow *m_pUI;
-    QLineEdit* mACARSInputLine;
+    QLineEdit* m_pACARSInputLine;
 
     ACARSInputRegistry *m_pInputRegistry;
     ACARSInput *m_pDefaultInput;
@@ -71,10 +74,13 @@ private:
     QStackedWidget* m_pViews;
 
     ACARSUser* m_pACARSUser;
+	
+	ACARSFlightSimData* m_pFlightSimData;
 
     QApplication* m_pParentApp;
 
     QVector<ACARSActionEvent*> m_vInputEvents;
+	QVector<QString*> m_vMessageDisplay;
 };
 
 #endif // ACARSMAINWINDOW_H

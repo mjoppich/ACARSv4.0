@@ -5,6 +5,7 @@
 #include <QPalette>
 #include <QFont>
 #include <QSize>
+#include <QDebug>
 
 ACARSMenu::ACARSMenu(QWidget *parent, int pagecount)
     : QWidget(parent)
@@ -17,7 +18,7 @@ ACARSMenu::ACARSMenu(QWidget *parent, int pagecount)
 
 }
 
-void ACARSMenu::setInputLine(QLineEdit *pInputLine)
+bool ACARSMenu::setInputLine(QLineEdit *pInputLine)
 {
     m_pInputLine = pInputLine;
 
@@ -25,6 +26,26 @@ void ACARSMenu::setInputLine(QLineEdit *pInputLine)
 
     for (i=0; i<m_pMenuPages->count(); ++i)
         ((ACARSMenuPage*)(m_pMenuPages->widget(i)))->setInputLine(pInputLine);
+
+	return true;
+}
+
+bool ACARSMenu::setACARSSystem(ACARSSystem* pSys)
+{
+	if (pSys != 0)
+	{
+		m_pSystem = pSys;
+		return true;
+	}
+
+	return false;
+}
+
+bool ACARSMenu::setExtComponents(QLineEdit *pInputLine, ACARSSystem *pSys)
+{
+	this->setInputLine(pInputLine);
+
+	return this->setACARSSystem(pSys);
 }
 
 void ACARSMenu::setText(QString *Text, QString *Position, ACARSMenu::LINE label)
@@ -41,9 +62,36 @@ void ACARSMenu::setTextWithFormat(QString *Text, QString *Position, ACARSMenu::L
 
 }
 
-
-
 void ACARSMenu::updateFSData(ACARSFlightSimData *pNewData)
 {
     m_pFSData = pNewData;
+}
+
+bool ACARSMenu::handleEvent(ACARSActionEvent *pIEvent)
+{
+
+	bool heresult = ((ACARSMenuPage*)(m_pMenuPages->currentWidget()))->handleEvent(m_pSystem,pIEvent);
+
+    return heresult;
+}
+
+void ACARSMenu::nextPage()
+{
+	int i = (++m_iCurPage) % m_iPageCount;
+
+	qDebug() << i << m_iCurPage << m_iPageCount << endl;
+
+	m_pMenuPages->setCurrentIndex(i);
+	m_pMenuPages->activateWindow();
+
+}
+
+void ACARSMenu::prevPage()
+{
+	int i = (--m_iCurPage) % m_iPageCount;
+
+	qDebug() << i << m_iCurPage << m_iPageCount << endl;
+
+	m_pMenuPages->setCurrentIndex(i);
+	m_pMenuPages->activateWindow();
 }

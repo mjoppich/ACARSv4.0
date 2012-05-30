@@ -1,5 +1,6 @@
 #include "ACARSFlightSimData.h"
 
-ACARSFlightSimData::ACARSFlightSimData()
+ACARSFlightSimData::ACARSFlightSimData(QObject *pParent)
+	:QObject(pParent)
 {
 }

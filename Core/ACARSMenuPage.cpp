@@ -309,3 +309,38 @@ void ACARSMenuPage::setFilledInput(QString *Position, int iChars, ACARSMenu::COL
 
 
 }
+
+int ACARSMenuPage::getLSKIndex(QString sEntry)
+{
+    int i = 0;
+    if (sEntry.at(0) == 'L')
+    {
+        i = (sEntry.right(1).toInt()-1)*2;
+    } else {
+
+        i = (sEntry.right(1).toInt()-1)*2+1;
+    }
+
+    return i;
+}
+
+void ACARSMenuPage::resetEntry(QString sEntry)
+{
+
+    int i = this->getLSKIndex(sEntry);
+
+	MainLabels[i]->setText(mDefaultEntries[i]);
+
+}
+
+bool ACARSMenuPage::changedEntry(QString sEntry)
+{
+
+    int i = this->getLSKIndex(sEntry);
+
+	if (MainLabels[i]->text().compare(mDefaultEntries[i]) != 0)
+		return true;
+
+	return false;
+
+}
