@@ -7,6 +7,7 @@
 class ACARSUser : public QObject
 {
 public:
+	ACARSUser(ACARSUser *pUser) {mUsername = pUser->getUsername(); mUserSession = pUser->mUserSession;};
     ACARSUser(QString pUsername, QString pUserSession);
 
     QString getUsername();

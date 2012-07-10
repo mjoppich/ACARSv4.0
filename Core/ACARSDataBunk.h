@@ -7,27 +7,12 @@
 class ACARSFlightSimData;
 class QLineEdit;
 
-class ACARSLatLon
-{
-public:
-    ACARSLatLon(float fLat, float fLon);
+#include <Base/ACARSAircraft.h>
+#include <Base/ACARSAirport.h>
+#include <Base/ACARSLatLon.h>
+#include <Core/ACARSInitInfo.h>
 
-    float DistanceToNM(ACARSLatLon* to);
-    float DistanceToKM(ACARSLatLon* to);
-
-    static float DistanceFromTo(ACARSLatLon* from, ACARSLatLon* to);
-
-    float getLat();
-    float getLon();
-
-    void setLat(float fLat);
-    void setLon(float fLon);
-
-private:
-    float m_fLatitude;
-    float m_fLongitude;
-
-};
+#include <Core/ACARSUser.h>
 
 class ACARSDataBunk
 {
@@ -35,9 +20,23 @@ public:
     ACARSDataBunk();
 
     void Update(ACARSFlightSimData* pUpdate);
+	void Update(ACARSUser* pPilot);
+	void Update(ACARSInitInfo* pInit);
+
+	//Getter
+
+	//User
+	QString getACARSUsername();
+
+	//INIT
+	ACARSAirport* getDepartureAirport();
+	ACARSAirport* getArrivalAirport();
+
+	ACARSAircraft* getAircraft();
 
     //Position
     ACARSLatLon* getPositionLatLon();
+	void setPositionLatLon(ACARSLatLon *newpos);
 
     //Altitude
     int getAltimeterAltitude();
@@ -50,14 +49,25 @@ public:
     int getGroundSpeed();
 
     //Times
-    QDateTime* getCurrentTime();
     QTime* getLastUpdateTime();
+	void setLastUpdateTime();
 
 
 private:
 
+	int m_iIAS;
+	int m_iGS;
+	float m_fMach;
+
+	int m_iFtAboveGround;
+
+	ACARSLatLon* m_pPosition;
+
     ACARSFlightSimData* m_pCurrentFSData;
-    QTime* LastUpdate;
+	ACARSUser* m_pCurrentUser;
+	ACARSInitInfo* m_pCurrentInitInfo;
+
+    QTime* m_pLastUpdate;
 };
 
 #endif // ACARSDATABUNK_H

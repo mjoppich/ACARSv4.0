@@ -36,7 +36,8 @@ bool MENUPAGEInit1::handleEvent(ACARSSystem* pACARSSys, ACARSActionEvent *pIEven
 
     if (pIEvent->isEventType(ACARSEVENT::LSK))
     {
-        if (m_pInputLine->text().compare("D") == 0)
+		int stringcompare = m_pInputLine->text().compare("D");
+		if (stringcompare == 0)
         {
             this->resetEntry(pIEvent->getInputValue());
             m_pInputLine->clear();

@@ -4,8 +4,13 @@
 #include <Core/ACARSMenuPage.h>
 #include <Core/ACARSSystem.h>
 
+class QNetworkReply;
+class QNetworkAccessManager;
+
 class MENUPAGELogin : public ACARSMenuPage
 {
+	Q_OBJECT
+
 public:
     MENUPAGELogin(QWidget *parent, int iCount, int iNum)
         :ACARSMenuPage(parent,iCount,iNum)
@@ -18,14 +23,19 @@ public:
     virtual bool handleEvent(ACARSSystem *pACARSSys, ACARSActionEvent *pIEvent);
     virtual bool init();
 
-    ~MENUPAGELogin() {}
+	~MENUPAGELogin() {}
+
+public slots:
+	bool passwordCheckDone(QNetworkReply* reply);
+
 
 private:
 
     bool evaluateLogin(QString username, QString password);
     QString getUserSession(QString username, QString password);
-
     bool m_bIsLoggedIn;
+
+	QNetworkAccessManager *m_pNetworkManager;
 
 };
 

@@ -344,3 +344,8 @@ bool ACARSMenuPage::changedEntry(QString sEntry)
 	return false;
 
 }
+
+void ACARSMenuPage::updateFSData(ACARSDataBunk *pNewData)
+{
+    m_pFSData = pNewData;
+}

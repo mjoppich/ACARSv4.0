@@ -3,12 +3,16 @@
 #include <Core/ACARSInput.h>
 #include <Core/ACARSEvents.h>
 #include <Core/ACARSUser.h>
+#include <Core/ACARSDataBunk.h>
 
 #include <FlightSim/ACARSFlightSimData.h>
 #include <FlightSim/XPLANEFlightSimData.h>
 
 #include <Menus/LOGIN/MENULogin.h>
 #include <Menus/INIT/MENUInit.h>
+
+#include <LiveACARS/FTGLiveACARS.h>
+#include <LiveACARS/LiveACARS.h>
 
 #include"ui_ACARSMainWindow.h"
 
@@ -44,16 +48,15 @@ ACARSSystem::ACARSSystem(QApplication *pApp, QWidget *parent):
     m_pUI->setupUi(this);
 
 
-	/*
-	QQuaternion *pQuat = new QQuaternion(-0.090664600000000 , 0.692324000000000  , 0.154004000000000  , 0.699107000000000);
-	QVector3D *pVec = new QVector3D(1,1,1);
+	//QQuaternion *pQuat = new QQuaternion(  0.697615000000000 ,  0.145765000000000 ,  0.692863000000000 , -0.109666000000000);
+	//QVector3D *pVec = new QVector3D(1,0,0);
 
-	QMatrix4x4 *pMat = new QMatrix4x4();
-	pMat->rotate(*pQuat);
+	//QMatrix4x4 *pMat = new QMatrix4x4();
+	//pMat->rotate(*pQuat);
 
-	qDebug() << pQuat->rotatedVector(*pVec) << endl;
-	qDebug() << *pMat << endl;
-	*/
+	//qDebug() << pQuat->rotatedVector(*pVec) << endl;
+	//qDebug() << *pMat << endl;
+
 
 
     this->setWindowTitle(QString("ACARS ").append(ACARSSystem::ACARSVersion));
@@ -126,7 +129,9 @@ ACARSSystem::ACARSSystem(QApplication *pApp, QWidget *parent):
     m_pInputRegistry->RegisterInput(LSKInput);
     m_pInputRegistry->RegisterInput(MenuInput);
 
-	m_pFlightSimData = (ACARSFlightSimData*)new XPLANEFlightSimData(this);
+	new XPLANEFlightSimData(this);
+	m_pLiveACARS = (LiveACARS*) (new FTGLiveACARS(this));
+	m_pCurrentData = new ACARSDataBunk();
 
 
     //TIMER
@@ -179,8 +184,19 @@ bool ACARSSystem::eventFilter(QObject *pObj, QEvent *pEvent)
 
     if (pEvent->type() == ACARSEVENT::LOGINEVENT)
     {
-        m_pUser = (ACARSUser*) pObj;
-        qDebug() << m_pUser->getUsername() << " logged in";
+		m_pCurrentData->Update((ACARSUser*) pObj);
+    }
+
+    if (pEvent->type() == ACARSEVENT::INITCHANGEEVENT)
+    {
+		m_pCurrentData->Update((ACARSInitInfo*) pObj);
+        qDebug() << "INIT CHANE EVENT RECEIVED";
+    }
+
+    if (pEvent->type() == ACARSEVENT::FSUPDATEEVENT)
+    {
+        qDebug() << " FS UPDATE RECEIVED";
+		m_pCurrentData->Update((ACARSFlightSimData*)pObj);
     }
 
 	if (pEvent->type() == ACARSEVENT::MESSAGEEVENT)
@@ -226,11 +242,6 @@ void ACARSSystem::GetInputEventsQueue(QVector<ACARSActionEvent*> *copyto)
     }
 }
 
-void ACARSSystem::setACARSUser(ACARSUser *pUser)
-{
-    m_pACARSUser = pUser;
-}
-
 void ACARSSystem::WriteInputLine(QString c)
 {
     m_pACARSInputLine->setText(m_pACARSInputLine->text().append(c));
@@ -257,6 +268,9 @@ QString ACARSSystem::getInputLineText()
 
 bool ACARSSystem::SystemLoop()
 {
+
+	((ACARSMenu*)(m_pViews->currentWidget()))->updateFSData(m_pCurrentData);
+
     // Get Events
     QVector<ACARSActionEvent*> pInputQueue;
     this->GetInputEventsQueue(&pInputQueue);
@@ -282,19 +296,19 @@ bool ACARSSystem::SystemLoop()
              this->WriteInputLine(pCurrentIE->getInputValue());
         }
 
-        if (((ACARSMenu*)m_pViews->currentWidget())->handleEvent(pCurrentIE))
+        if (((ACARSMenu*)(m_pViews->currentWidget()))->handleEvent(pCurrentIE))
         {
-
-            //HANDLE MENU CHANGES HERE!
-            qDebug() << "MENU CHANGE!";
-
-            this->HandleEvents(pCurrentIE);
+			this->HandleEvents(pCurrentIE);     
 
             // WORK ADDON EVENTS - ONLY EVERY 1000ms and if allowed
             if (m_LastTime.msecsTo(QTime::currentTime()) < 0)
             {
                 m_LastTime = QTime::currentTime();
                 m_LastTime.addMSecs(1000);
+
+				if (m_pCurrentData != NULL)
+					m_pLiveACARS->Send(m_pCurrentData);
+
             }
         }
 
@@ -321,15 +335,12 @@ bool ACARSSystem::SystemLoop()
     return true;
 }
 
-void ACARSSystem::HandleEvents(ACARSActionEvent *pIEvent)
+bool ACARSSystem::HandleEvents(ACARSActionEvent *pIEvent)
 {
 
-    if (pIEvent->getEventType() != ACARSEVENT::MENU)
+    if (pIEvent->getEventType() == ACARSEVENT::MENU)
     {
 
-        ((ACARSMenu*)(m_pViews->currentWidget()))->handleEvent(pIEvent);
-
-    } else {
         //Make another menu active
 
         if (pIEvent->getInputValue() == "INIT")
@@ -342,7 +353,14 @@ void ACARSSystem::HandleEvents(ACARSActionEvent *pIEvent)
 			((ACARSMenu*)(m_pViews->currentWidget()))->nextPage();
 		if (pIEvent->getInputValue() == "NEXT")
 			((ACARSMenu*)(m_pViews->currentWidget()))->prevPage();
-    }
+    
+		return true;
+	}
 
+	/*
+			return ((ACARSMenu*)(m_pViews->currentWidget()))->handleEvent(pIEvent);      
+
+    } else {
+	*/
 
 }

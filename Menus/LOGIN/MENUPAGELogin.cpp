@@ -1,13 +1,60 @@
 #include "MENUPAGELogin.h"
 
 #include <Core/ACARSUser.h>
+#include <QNetworkAccessManager>
+#include <QUrl>
+#include <QNetworkRequest>
+#include <QNetworkReply>
 
 bool MENUPAGELogin::evaluateLogin(QString username, QString password)
 {
-    if (username.compare("-----", Qt::CaseInsensitive) == 0 && password.compare("-----") == 0)
-        return true;
 
-    return false;
+	QUrl postData;
+	postData.addQueryItem("pilot", username);
+	postData.addQueryItem("password", password);
+
+	QNetworkRequest oRequest = QNetworkRequest(QUrl("http://www.flyingtigersgroup.org/acarsftg/ftgacars/pwcheck.asp"));
+	oRequest.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+
+	m_pNetworkManager->post(oRequest, postData.encodedQuery());
+
+	return true;
+
+}
+
+bool MENUPAGELogin::passwordCheckDone(QNetworkReply * reply)
+{
+	QByteArray returncode;
+
+	if(reply->error() == QNetworkReply::NoError)
+	{
+		//then you use this function wich will make you get a bytearray with the xml file
+		returncode = reply->readAll();
+
+		if (returncode == "0")
+		{
+			m_bIsLoggedIn = true;
+			qDebug() << "login success";
+			QString sUserSession = this->getUserSession(this->getText("L4"),this->getText("R4"));
+
+			m_pACARSSys->eventFilter((QObject*) new ACARSUser(this->getText("L4"),sUserSession),new ACARSMenuViewEvent(ACARSEVENT::LOGINEVENT));
+			m_pACARSSys->eventFilter((QObject*) new QString("LOGIN SUCCESSFUL"),new ACARSMenuViewEvent(ACARSEVENT::MESSAGEEVENT));
+		} else {
+			m_bIsLoggedIn = true;
+			qDebug() << "login denied";
+			m_pACARSSys->eventFilter((QObject*) new QString("LOGIN DENIED"),new ACARSMenuViewEvent(ACARSEVENT::MESSAGEEVENT));
+		}
+
+
+	} else {
+		m_bIsLoggedIn = true;
+		qDebug() << "Website error" << (int)reply->error();
+		qDebug() << reply->readAll();
+	}
+
+
+
+	return false;
 }
 
 QString MENUPAGELogin::getUserSession(QString username, QString password)
@@ -20,6 +67,8 @@ QString MENUPAGELogin::getUserSession(QString username, QString password)
 bool MENUPAGELogin::handleEvent(ACARSSystem* pACARSSys, ACARSActionEvent *pIEvent)
 {
 
+	m_pACARSSys = pACARSSys;
+
     if (pIEvent->isEventType(ACARSEVENT::MENU))
     {
 
@@ -27,19 +76,7 @@ bool MENUPAGELogin::handleEvent(ACARSSystem* pACARSSys, ACARSActionEvent *pIEven
 
         if (pIEvent->getInputValue().compare("EXEC") == 0)
         {
-            if (this->evaluateLogin(this->getText("L4"),this->getText("R4")))
-            {
-                m_bIsLoggedIn = true;
-
-                qDebug() << "logged in";
-
-                QString sUserSession = this->getUserSession(this->getText("L4"),this->getText("R4"));
-
-                pACARSSys->eventFilter((QObject*) new ACARSUser(this->getText("L4"),sUserSession),new ACARSMenuViewEvent(ACARSEVENT::LOGINEVENT));
-            }
-
-
-			pACARSSys->eventFilter((QObject*) new QString("TestMessage"),new ACARSMenuViewEvent(ACARSEVENT::MESSAGEEVENT));
+			this->evaluateLogin(this->getText("L4"),this->getText("R4"));
         }
     }
 
@@ -100,8 +137,8 @@ bool MENUPAGELogin::init()
 	}
 	
 	mDefaultEntries[2] = "ACARS 4.0 alpha";
-	mDefaultEntries[6] = "-----";
-	mDefaultEntries[7] = "-----";
+	mDefaultEntries[6] = "user";
+	mDefaultEntries[7] = "password";
 	mDefaultEntries[10] = "EXEC TO LOGIN";
 
     for(i=0; i<12; ++i)
@@ -116,6 +153,10 @@ bool MENUPAGELogin::init()
 	this->setTextWithFormat(QString("PLEASE LOGIN"),QString("L3"),ACARSMenu::HELPER, ACARSMenu::AMBER);
     this->setTextWithFormat(QString("Username"),QString("L4"),ACARSMenu::HELPER);
     this->setText(QString("password"),QString("R4"),ACARSMenu::HELPER);
+
+
+	m_pNetworkManager = new QNetworkAccessManager(this);
+	this->connect(m_pNetworkManager, SIGNAL(finished(QNetworkReply *)), this, SLOT(passwordCheckDone(QNetworkReply *)));
 
     return true;
 

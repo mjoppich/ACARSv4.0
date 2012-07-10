@@ -27,6 +27,8 @@ public:
 
     void setInputLine(QLineEdit *pInputLine);
 
+	void updateFSData(ACARSDataBunk* pNewData);
+
     virtual bool handleEvent(ACARSSystem *pACARSSys, ACARSActionEvent *pIEvent) = 0;
     virtual bool init() = 0;
 
@@ -53,6 +55,9 @@ protected:
     int m_iPageNum;
 
     static const char* pCharInputPlaceholder;
+
+	ACARSDataBunk* m_pFSData;
+	ACARSSystem* m_pACARSSys;
 
 };
 

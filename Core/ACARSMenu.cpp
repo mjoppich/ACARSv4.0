@@ -1,6 +1,7 @@
 #include "ACARSMenu.h"
 #include <Core/ACARSEvents.h>
 #include <Core/ACARSMenuPage.h>
+#include <Core/ACARSDataBunk.h>
 
 #include <QPalette>
 #include <QFont>
@@ -62,16 +63,17 @@ void ACARSMenu::setTextWithFormat(QString *Text, QString *Position, ACARSMenu::L
 
 }
 
-void ACARSMenu::updateFSData(ACARSFlightSimData *pNewData)
+void ACARSMenu::updateFSData(ACARSDataBunk *pNewData)
 {
     m_pFSData = pNewData;
+
+	((ACARSMenuPage*)(m_pMenuPages->currentWidget()))->updateFSData(pNewData);
 }
 
 bool ACARSMenu::handleEvent(ACARSActionEvent *pIEvent)
 {
-
-	bool heresult = ((ACARSMenuPage*)(m_pMenuPages->currentWidget()))->handleEvent(m_pSystem,pIEvent);
-
+	ACARSMenuPage* pCurrentPage = (ACARSMenuPage*)(m_pMenuPages->currentWidget());
+	bool heresult = pCurrentPage->handleEvent(m_pSystem,pIEvent);
     return heresult;
 }
 

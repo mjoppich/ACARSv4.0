@@ -14,6 +14,7 @@
 class ACARSActionEvent;
 class ACARSMenuPage;
 class ACARSSystem;
+class ACARSDataBunk;
 
 class ACARSMenu : public QWidget
 {
@@ -37,7 +38,7 @@ public:
     virtual bool init() = 0;
 
 
-    void updateFSData(ACARSFlightSimData* pNewData);
+    void updateFSData(ACARSDataBunk* pNewData);
 
 	void nextPage();
 	void prevPage();
@@ -51,7 +52,7 @@ protected:
 	int m_iCurPage;
 
     QLineEdit *m_pInputLine;
-    ACARSFlightSimData* m_pFSData;
+    ACARSDataBunk* m_pFSData;
 
     QStackedWidget *m_pMenuPages;
     ACARSMenuPage *m_pCurrentMenu;

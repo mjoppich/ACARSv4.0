@@ -6,6 +6,7 @@
 
 class MENUPAGEInit2 : public ACARSMenuPage
 {
+	Q_OBJECT
 public:
     MENUPAGEInit2(QWidget *parent, int iCount, int iNum)
         :ACARSMenuPage(parent,iCount,iNum)

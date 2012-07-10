@@ -19,6 +19,8 @@ class QStackedWidget;
 class QApplication;
 class XPlaneFlightSimData;
 class ACARSFlightSimData;
+class ACARSDataBunk;
+class LiveACARS;
 
 class ACARSSystem : public QMainWindow
 {
@@ -42,12 +44,9 @@ public:
 	QString getInputLineText();
 
     //EVENTS
-    void HandleEvents(ACARSActionEvent* pIEvent);
+    bool HandleEvents(ACARSActionEvent* pIEvent);
     bool eventFilter(QObject *pObj, QEvent *pEvent);
     void GetInputEventsQueue(QVector<ACARSActionEvent *> *copyto);
-
-    //DATA MANAGEMENT
-    void setACARSUser(ACARSUser *pUser);
 
     ~ACARSSystem();
 
@@ -65,6 +64,7 @@ private:
 
     ACARSInputRegistry *m_pInputRegistry;
     ACARSInput *m_pDefaultInput;
+	LiveACARS *m_pLiveACARS;
 
     QTimer* m_pTimer;
     QTime m_LastTime;
@@ -73,9 +73,7 @@ private:
     ACARSMenu* m_pMenuViews[12];
     QStackedWidget* m_pViews;
 
-    ACARSUser* m_pACARSUser;
-	
-	ACARSFlightSimData* m_pFlightSimData;
+	ACARSDataBunk* m_pCurrentData;
 
     QApplication* m_pParentApp;
 
