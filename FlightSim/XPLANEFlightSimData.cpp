@@ -32,8 +32,6 @@ void XPLANEFlightSimData::readInputData()
 
 		this->parseInputData(datagram);
 
-		qDebug() << datagram.data();
-
 
 		}
 }
@@ -41,18 +39,27 @@ void XPLANEFlightSimData::readInputData()
 void XPLANEFlightSimData::parseInputData(QByteArray InputData)
 {
 
-		//altitude, latitude, longitude,vertspeed, groundspeed, indicatedairspeed, machspeed, payloadweight, totalweight, fueltotalweight, counter
+	qDebug() << InputData.data();
+
+		//altitude, latitude, longitude,vertspeed, groundspeed, indicatedairspeed, machspeed, payloadweight, totalweight, fueltotalweight, counter, heading
 		QList<QByteArray> newdata = InputData.split(';');
 
-		mfGroundSpeed = newdata.at(4).toFloat();
-		mfIAS = newdata.at(5).toFloat();
-		mfMach = newdata.at(6).toFloat();
+		if (newdata.length() < 11)
+			return;
 
-		mfLatitude = newdata.at(1).toFloat();
-		mfLongitude = newdata.at(2).toFloat();
+		mfGroundSpeed = QString(newdata.at(4)).toFloat();
+		mfIAS = QString(newdata.at(5)).toFloat();
+		mfMach = QString(newdata.at(6)).toFloat();
 
-		mfAltitude = newdata.at(0).toFloat();
+		mdLatitude = QString(newdata.at(1)).toDouble();
+		mdLongitude = QString(newdata.at(2)).toDouble();
 
-		((ACARSSystem*)this->parent())->eventFilter((QObject*)this, ((QEvent*) new ACARSActionEvent(ACARSEVENT::FSUPDATEEVENT, "")));
+		mfAltitude = QString(newdata.at(0)).toFloat();
+
+		mfHeading = QString(newdata.at(11)).toFloat();
+
+		qDebug()  << qSetRealNumberPrecision(10) << mfAltitude << mdLatitude << mdLongitude << mfGroundSpeed << mfIAS << mfMach << mfHeading;
+
+		((ACARSSystem*)this->parent())->eventFilter((QObject*)this, ((QEvent*) new ACARSMenuViewEvent(ACARSEVENT::FSUPDATEEVENT)));
 
 }

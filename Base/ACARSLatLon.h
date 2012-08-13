@@ -1,55 +1,71 @@
 #ifndef ACARSLATLON_H
 #define ACARSLATLON_H
-
+#include <qmath.h> 
 #include <QString>
 
 class ACARSLatLon
 {
 public:
-    ACARSLatLon(float fLat, float fLon)
+    ACARSLatLon(double dLat, double dLon)
 	{
-		m_fLatitude = fLat;
-		m_fLongitude = fLon;
+		m_dLatitude = dLat;
+		m_dLongitude = dLon;
 	}
 
-    float DistanceToNM(ACARSLatLon* to)
+    float DistanceTo(ACARSLatLon* to, QString mode = "nm")
 	{
-		return 0;
+		return DistanceFromTo(this, to, mode);
 	}
 
-    float DistanceToKM(ACARSLatLon* to)
+    static float DistanceFromTo(ACARSLatLon* from, ACARSLatLon* to, QString mode = "nm")
 	{
-		return 0;
+		double R = 6371; // km
+		double d = qAcos(qSin(from->getLat())*qSin(to->getLat()) + 
+                  qCos(from->getLat())*qCos(to->getLat()) *
+				  qCos(to->getLon()-from->getLon())) * R;
+
+		if (mode == "km")
+		{
+			return (float)d;
+		} else {
+			return (float)(d*0.5399568034557235);
+		}
 	}
 
-    static float DistanceFromTo(ACARSLatLon* from, ACARSLatLon* to)
+	static float BearingFromTo(ACARSLatLon* from, ACARSLatLon* to)
 	{
-		return 0;
+		double dLon = to->getLon()-from->getLon();
+
+		double y = qSin(dLon) * qCos(to->getLat());
+		double x = qCos(from->getLat())*qSin(to->getLat()) - qSin(from->getLat())*qCos(to->getLat())*cos(dLon);
+		double brng = qAtan2(x,y) * 180.0f / M_PI;
+
+		return (float)brng;
 	}
 
     float getLat()
 	{
-		return m_fLatitude;
+		return m_dLatitude;
 	}
 
     float getLon()
 	{
-		return m_fLongitude;
+		return m_dLongitude;
 	}
 
-    void setLat(float fLat)
+    void setLat(double dLat)
 	{
-		m_fLatitude = fLat;
+		m_dLatitude = dLat;
 	}
 
-    void setLon(float fLon)
+    void setLon(double dLon)
 	{
-		m_fLongitude = fLon;
+		m_dLongitude = dLon;
 	}
 
 private:
-    float m_fLatitude;
-    float m_fLongitude;
+    double m_dLatitude;
+    double m_dLongitude;
 
 };
 

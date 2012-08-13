@@ -76,7 +76,10 @@ bool MENUPAGELogin::handleEvent(ACARSSystem* pACARSSys, ACARSActionEvent *pIEven
 
         if (pIEvent->getInputValue().compare("EXEC") == 0)
         {
-			this->evaluateLogin(this->getText("L4"),this->getText("R4"));
+			//this->evaluateLogin(this->getText("L4"),this->getText("R4"));
+			m_bIsLoggedIn = true;
+			m_pACARSSys->eventFilter((QObject*) new ACARSUser(this->getText("L4"),""),new ACARSMenuViewEvent(ACARSEVENT::LOGINEVENT));
+			m_pACARSSys->eventFilter((QObject*) new QString("LOGIN SUCCESSFUL"),new ACARSMenuViewEvent(ACARSEVENT::MESSAGEEVENT));
         }
     }
 
@@ -136,9 +139,9 @@ bool MENUPAGELogin::init()
 		mDefaultEntries[i] = "";
 	}
 	
-	mDefaultEntries[2] = "ACARS 4.0 alpha";
-	mDefaultEntries[6] = "user";
-	mDefaultEntries[7] = "password";
+	mDefaultEntries[2] = "LiveACARS 4.0a";
+	mDefaultEntries[6] = "";
+	mDefaultEntries[7] = "";
 	mDefaultEntries[10] = "EXEC TO LOGIN";
 
     for(i=0; i<12; ++i)

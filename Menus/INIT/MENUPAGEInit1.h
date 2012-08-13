@@ -19,6 +19,7 @@ public:
 
     virtual bool handleEvent(ACARSSystem *pACARSSys, ACARSActionEvent *pIEvent);
     virtual bool init();
+	bool allFilled();
 
     ~MENUPAGEInit1() {}
 

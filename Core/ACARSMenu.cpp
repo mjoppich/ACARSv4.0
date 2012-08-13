@@ -74,6 +74,9 @@ bool ACARSMenu::handleEvent(ACARSActionEvent *pIEvent)
 {
 	ACARSMenuPage* pCurrentPage = (ACARSMenuPage*)(m_pMenuPages->currentWidget());
 	bool heresult = pCurrentPage->handleEvent(m_pSystem,pIEvent);
+
+	pCurrentPage->repaint();
+
     return heresult;
 }
 

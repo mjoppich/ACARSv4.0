@@ -10,6 +10,7 @@
 
 #include <Menus/LOGIN/MENULogin.h>
 #include <Menus/INIT/MENUInit.h>
+#include <Menus/PROG/MENUProg.h>
 
 #include <LiveACARS/FTGLiveACARS.h>
 #include <LiveACARS/LiveACARS.h>
@@ -37,6 +38,8 @@
 #include <QVector3d.h>
 #include <qmatrix4x4.h>
 
+#include <QXmlStreamReader>
+
 const char *ACARSSystem::ACARSFontName = "Lucida Console";
 const char *ACARSSystem::ACARSVersion = "4.0.0a";
 
@@ -56,8 +59,6 @@ ACARSSystem::ACARSSystem(QApplication *pApp, QWidget *parent):
 
 	//qDebug() << pQuat->rotatedVector(*pVec) << endl;
 	//qDebug() << *pMat << endl;
-
-
 
     this->setWindowTitle(QString("ACARS ").append(ACARSSystem::ACARSVersion));
     this->installEventFilter(this);
@@ -107,15 +108,22 @@ ACARSSystem::ACARSSystem(QApplication *pApp, QWidget *parent):
     m_pViews->move(70,50);
     m_pViews->setStyleSheet("QStackedWidget {background-color: green}");
 
+	m_vMessageDisplay.clear();
+
     ACARSMenu* pInit = new MENUInit(m_pViews);
     pInit->setExtComponents(m_pACARSInputLine,this);
     pInit->init();
     ACARSMenu* pLogin = new MENULogin(m_pViews);
     pLogin->setExtComponents(m_pACARSInputLine,this);
     pLogin->init();
+    ACARSMenu* pProg = new MENUProg(m_pViews);
+    pProg->setExtComponents(m_pACARSInputLine,this);
+    pProg->init();
+
 
     m_pViews->addWidget(pLogin);
     m_pViews->addWidget(pInit);
+	m_pViews->addWidget(pProg);
     m_pViews->setCurrentWidget(pLogin);
 
     //USER INPUT REGISTY
@@ -208,10 +216,10 @@ bool ACARSSystem::eventFilter(QObject *pObj, QEvent *pEvent)
 			pos = 0;
 		m_vMessageDisplay.insert(pos,(QString*) pObj);
 
-		if (m_vMessageDisplay.size() == 1)
-			m_vMessageDisplay.append(new QString(m_pACARSInputLine->text()));
+		//if (m_vMessageDisplay.size() == 1)
+		//	m_vMessageDisplay.append(new QString(m_pACARSInputLine->text()));
 
-		this->ClearInputLine();
+		//this->ClearInputLine();
     }
 
     return false;
@@ -222,7 +230,7 @@ void ACARSSystem::Start()
 {
     this->show();
     m_LastTime = QTime::currentTime();
-    m_pTimer->start(1);
+    m_pTimer->start(100);
 }
 
 bool ACARSSystem::UpdateACARSCheck()
@@ -269,7 +277,8 @@ QString ACARSSystem::getInputLineText()
 bool ACARSSystem::SystemLoop()
 {
 
-	((ACARSMenu*)(m_pViews->currentWidget()))->updateFSData(m_pCurrentData);
+	if (m_pCurrentData->ACARSReady())
+		((ACARSMenu*)(m_pViews->currentWidget()))->updateFSData(m_pCurrentData);
 
     // Get Events
     QVector<ACARSActionEvent*> pInputQueue;
@@ -287,6 +296,15 @@ bool ACARSSystem::SystemLoop()
 			if ((pCurrentIE->isEventType(ACARSEVENT::ILINE)) && (pCurrentIE->getInputValue().compare("C") == 0))
 			{
 				m_vMessageDisplay.erase(m_vMessageDisplay.begin());
+
+				if (m_vMessageDisplay.size() == 0)
+				{
+					this->ClearInputLine();
+					this->WriteInputLine(m_sLastUserInput);
+				}
+
+				pInputQueue.erase(pInputQueue.begin());
+				continue;
 			}
 
         // Work CORE EVENTS - NOTE: These must NOT alter pInputQueue!
@@ -298,39 +316,48 @@ bool ACARSSystem::SystemLoop()
 
         if (((ACARSMenu*)(m_pViews->currentWidget()))->handleEvent(pCurrentIE))
         {
-			this->HandleEvents(pCurrentIE);     
-
-            // WORK ADDON EVENTS - ONLY EVERY 1000ms and if allowed
-            if (m_LastTime.msecsTo(QTime::currentTime()) < 0)
-            {
-                m_LastTime = QTime::currentTime();
-                m_LastTime.addMSecs(1000);
-
-				if (m_pCurrentData != NULL)
-					m_pLiveACARS->Send(m_pCurrentData);
-
-            }
+			if (this->HandleEvents(pCurrentIE))
+			{
+				((ACARSMenu*)(m_pViews->currentWidget()))->handleEvent(new ACARSActionEvent(ACARSEVENT::TYPE::VIEWUPDATEEVENT,""));
+			}
         }
-
-		//messages to display
-		if ((m_vMessageDisplay.size() > 0) && (m_pACARSInputLine->text().compare(*(m_vMessageDisplay.first())) != 0))
-		{
-			this->ClearInputLine();
-
-			m_pACARSInputLine->setText(*(m_vMessageDisplay.first()));
-
-			if (m_vMessageDisplay.size() == 1)
-				m_vMessageDisplay.erase(m_vMessageDisplay.begin());
-
-		}
-
 
         pInputQueue.erase(pInputQueue.begin());
     }
 
+    // WORK ADDON EVENTS - ONLY EVERY 1000ms and if allowed
+    if (abs(m_LastTime.msecsTo(QTime::currentTime())) > 1000)
+    {
+        m_LastTime = QTime::currentTime();
+        m_LastTime.addMSecs(1000);
 
+		if (m_pCurrentData->ACARSReady())
+		{
+			m_pLiveACARS->Send(m_pCurrentData);
+		}
 
-    m_pViews->show();
+    }
+
+	//messages to display
+	if ((m_vMessageDisplay.size() > 0) && (m_pACARSInputLine->text() != (*(m_vMessageDisplay.first()))))
+	{
+	
+		QString input = this->m_pACARSInputLine->text();
+
+		if (input != "")
+			if (input != (*(m_vMessageDisplay.first())))
+			{
+				m_sLastUserInput = this->m_pACARSInputLine->text();
+			}
+		
+		this->ClearInputLine();
+
+		m_pACARSInputLine->setText(*(m_vMessageDisplay.first()));
+
+	}
+
+	m_pViews->repaint();
+	m_pParentApp->processEvents();
 
     return true;
 }
@@ -341,26 +368,36 @@ bool ACARSSystem::HandleEvents(ACARSActionEvent *pIEvent)
     if (pIEvent->getEventType() == ACARSEVENT::MENU)
     {
 
-        //Make another menu active
+		int iSwitchTo;
+		iSwitchTo = m_pViews->currentIndex();
 
-        if (pIEvent->getInputValue() == "INIT")
-            m_pViews->setCurrentIndex(1);
-        if (pIEvent->getInputValue() == "LOGN")
-			m_pViews->setCurrentIndex(0);
+		if (pIEvent->getInputValue() == "PROG")
+			iSwitchTo = 2;
+		if (pIEvent->getInputValue() == "INIT")
+			iSwitchTo = 1;
+		if (pIEvent->getInputValue() == "LOGN")
+			iSwitchTo = 0;
+
+		if (iSwitchTo != m_pViews->currentIndex())
+		{
+			m_pViews->setCurrentIndex(iSwitchTo);
+			return true;
+		}
 
 
 		if (pIEvent->getInputValue() == "PREV")
+		{
 			((ACARSMenu*)(m_pViews->currentWidget()))->nextPage();
-		if (pIEvent->getInputValue() == "NEXT")
+			return true;
+		}
+
+		if (pIEvent->getInputValue() == "NEXT") {
 			((ACARSMenu*)(m_pViews->currentWidget()))->prevPage();
+			return true;
+		}
     
-		return true;
 	}
 
-	/*
-			return ((ACARSMenu*)(m_pViews->currentWidget()))->handleEvent(pIEvent);      
-
-    } else {
-	*/
+	return false;
 
 }

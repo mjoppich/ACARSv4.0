@@ -21,6 +21,7 @@ class XPlaneFlightSimData;
 class ACARSFlightSimData;
 class ACARSDataBunk;
 class LiveACARS;
+class ACARSDataBunk;
 
 class ACARSSystem : public QMainWindow
 {
@@ -32,6 +33,7 @@ public:
     explicit ACARSSystem(QApplication *pApp, QWidget *parent = 0);
     void Start();
     bool UpdateACARSCheck();
+	ACARSDataBunk* getACARSData() {return m_pCurrentData;}
 
     //User
     ACARSUser *m_pUser;
@@ -79,6 +81,7 @@ private:
 
     QVector<ACARSActionEvent*> m_vInputEvents;
 	QVector<QString*> m_vMessageDisplay;
+	QString m_sLastUserInput;
 };
 
 #endif // ACARSMAINWINDOW_H

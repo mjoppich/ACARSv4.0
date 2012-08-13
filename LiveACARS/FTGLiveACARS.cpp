@@ -5,7 +5,10 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 
+#include <qdebug.h>
+
 #include <Core/ACARSDataBunk.h>
+#include <Base\ACARSTimeSpan.h>
 
 
 FTGLiveACARS::FTGLiveACARS(QObject *pParent)
@@ -13,6 +16,7 @@ FTGLiveACARS::FTGLiveACARS(QObject *pParent)
 {
 	m_pNetworkManager = new QNetworkAccessManager(this);
 	this->connect(m_pNetworkManager, SIGNAL(finished(QNetworkReply *)), this, SLOT(loadingFinished(QNetworkReply *)));
+
 }
 
 
@@ -59,11 +63,34 @@ bool FTGLiveACARS::Send(ACARSDataBunk* pData)
 {
 
 	QUrl postData;
-	postData.addQueryItem("pilot", "");
-	postData.addQueryItem("password", "");
+	postData.addQueryItem("pilotid",pData->getACARSUsername());
+	postData.addQueryItem("remark","");
+	postData.addQueryItem("flightstate","unknown");
+	postData.addQueryItem("flightnumber", pData->getFlightNumber());
+	postData.addQueryItem("aircraft", pData->getAircraft()->getFTGCode());
+	postData.addQueryItem("aircraftreg", pData->getAircraft()->getRegistration());
+	postData.addQueryItem("depairport", pData->getDepartureAirport()->getICAOCode());
+	postData.addQueryItem("arrairport", pData->getArrivalAirport()->getICAOCode());
+	postData.addQueryItem("depair_lon", ts(pData->getDepartureAirport()->getLatLon()->getLon()));
+	postData.addQueryItem("depair_lat", ts(pData->getDepartureAirport()->getLatLon()->getLat()));
+	postData.addQueryItem("arrair_lon", ts(pData->getArrivalAirport()->getLatLon()->getLon()));
+	postData.addQueryItem("arrair_lat", ts(pData->getArrivalAirport()->getLatLon()->getLat()));
+	postData.addQueryItem("altitude", ts(pData->getAltitude("ft")));
+	postData.addQueryItem("machspeed", ts(pData->getMachSpeed(),2));
+	postData.addQueryItem("groundspeed", ts(pData->getGroundSpeed()));
+	postData.addQueryItem("heading", ts(pData->getHeading()));
+	float dist = ACARSLatLon::DistanceFromTo(pData->getDepartureAirport()->getLatLon(),pData->getArrivalAirport()->getLatLon(),"nm");
+	postData.addQueryItem("disttodest", ts(dist,4));
+
+	postData.addQueryItem("timetodest", pData->getTimeToDest()->toString());
+	postData.addQueryItem("acarsversion", "4.0");
+	postData.addQueryItem("current_lon", ts(pData->getPositionLatLon()->getLon()));
+	postData.addQueryItem("current_lat", ts(pData->getPositionLatLon()->getLat()));
 
 	QNetworkRequest oRequest = QNetworkRequest(QUrl("http://www.flyingtigersgroup.org/acarsftg/ftgacars/write_live.asp"));
 	oRequest.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+
+	qDebug() <<  postData.encodedQuery();
 
 	m_pNetworkManager->post(oRequest, postData.encodedQuery());
 
@@ -72,5 +99,8 @@ bool FTGLiveACARS::Send(ACARSDataBunk* pData)
 
 bool FTGLiveACARS::loadingFinished(QNetworkReply * reply)
 {
+
+	qDebug() << reply->readAll();
+
 	return true;
 }
