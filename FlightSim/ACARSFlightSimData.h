@@ -2,8 +2,8 @@
 #define ACARSFLIGHTSIMDATA_H
 
 #include <QObject>
-
-#include <Base\ACARSLatLon.h>
+#include <Base/ACARSLatLon.h>
+#include <QTime>
 
 class ACARSFlightSimData : public QObject
 {
@@ -23,6 +23,7 @@ public:
 	virtual int getWeight() {return miWeight;}
 	virtual int getFuelWeight() {return miFuelWeight;}
 	virtual int getCounter() {return miCounter;}
+	virtual QTime getCurrentTime(QString mode) {return QTime(1,1,1);}
 
 public slots:
 	virtual void readInputData() {};
@@ -31,6 +32,8 @@ private:
 	int miVertSpeed, miPayload, miWeight, miFuelWeight, miCounter;
 	float mfMach, mfGroundSpeed, mfIAS, mfAltitude, mfHeading;
 	double mdLatitude, mdLongitude;
+		QTime m_LCLTime;
+	QTime m_UTCTime;
 
 };
 

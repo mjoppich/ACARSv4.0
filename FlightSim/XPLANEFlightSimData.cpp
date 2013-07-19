@@ -9,6 +9,7 @@
 #include <QObject>
 #include <QList>
 
+
 XPLANEFlightSimData::XPLANEFlightSimData(QObject *pParent)
 	:ACARSFlightSimData(pParent)
 {
@@ -39,9 +40,7 @@ void XPLANEFlightSimData::readInputData()
 void XPLANEFlightSimData::parseInputData(QByteArray InputData)
 {
 
-	qDebug() << InputData.data();
-
-		//altitude, latitude, longitude,vertspeed, groundspeed, indicatedairspeed, machspeed, payloadweight, totalweight, fueltotalweight, counter, heading
+		//altitude, latitude, longitude,vertspeed, groundspeed, indicatedairspeed, machspeed, payloadweight, totalweight, fueltotalweight, counter, heading, utc, lcl
 		QList<QByteArray> newdata = InputData.split(';');
 
 		if (newdata.length() < 11)
@@ -58,7 +57,14 @@ void XPLANEFlightSimData::parseInputData(QByteArray InputData)
 
 		mfHeading = QString(newdata.at(11)).toFloat();
 
-		qDebug()  << qSetRealNumberPrecision(10) << mfAltitude << mdLatitude << mdLongitude << mfGroundSpeed << mfIAS << mfMach << mfHeading;
+		m_LCLTime = QTime(0,0,0);
+		m_LCLTime = m_LCLTime.addSecs(qFloor(QString(newdata.at(13)).toFloat()));
+
+		m_UTCTime = QTime(0,0,0);
+		m_UTCTime = m_UTCTime.addSecs(qFloor(QString(newdata.at(12)).toFloat()));
+		
+		qDebug()  << QString(newdata.at(12));
+		qDebug()  << QString(newdata.at(13));
 
 		((ACARSSystem*)this->parent())->eventFilter((QObject*)this, ((QEvent*) new ACARSMenuViewEvent(ACARSEVENT::FSUPDATEEVENT)));
 

@@ -74,11 +74,11 @@ ACARSAirport::~ACARSAirport(void)
 QString ACARSAirport::getIATACode() {return m_sIATA;};
 QString ACARSAirport::getICAOCode() {return m_sICAO;};
 
-QTime* ACARSAirport::getCurrentTime(QTime* pUTCTime)
+QTime ACARSAirport::getCurrentTime(QTime UTCTime)
 {
-	QTime* pLCL = new QTime(0,0,0,0);
-	pLCL->fromString(pUTCTime->toString());
-	pLCL->addSecs(m_iTimezone);
+	QTime LCL = QTime(0,0,0,0);
+	LCL = LCL.fromString(UTCTime.toString());
+	LCL = LCL.addSecs(m_iTimezone);
 
-	return pLCL;
+	return LCL;
 }

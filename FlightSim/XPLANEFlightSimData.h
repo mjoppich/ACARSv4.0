@@ -4,6 +4,7 @@
 #include <QObject.h>
 #include <FlightSim/ACARSFlightSimData.h>
 #include <Core/ACARSDataBunk.h>
+#include <QTime>
 
 class QUdpSocket;
 
@@ -53,6 +54,8 @@ public:
 	int getFuelWeight() {return miFuelWeight;}
 	int getCounter() {return miCounter;}
 
+	QTime getCurrentTime(QString mode) {if (mode == "LCL") {return m_LCLTime;} else {return m_UTCTime;}}
+
 	ACARSLatLon* getPosition() {return new ACARSLatLon(mdLatitude,mdLongitude);}
 	
 
@@ -65,6 +68,9 @@ private:
 	int miVertSpeed, miPayload, miWeight, miFuelWeight, miCounter;
 	float mfMach, mfGroundSpeed, mfIAS, mfAltitude, mfHeading;
 	double mdLatitude, mdLongitude;
+
+	QTime m_LCLTime;
+	QTime m_UTCTime;
 
 };
 

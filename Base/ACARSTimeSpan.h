@@ -8,7 +8,7 @@ class ACARSTimeSpan
 {
 public:
 	ACARSTimeSpan(int secs);
-	~ACARSTimeSpan();
+	~ACARSTimeSpan() {};
 
 	QString toString();
 

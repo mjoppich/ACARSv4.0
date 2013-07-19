@@ -135,35 +135,31 @@ float ACARSDataBunk::getHeading()
 }
 
 // Times
-QTime* ACARSDataBunk::getCurrentTime(QString mode)
+QTime ACARSDataBunk::getCurrentTime(QString mode)
 {
-	if (mode == "UTC")
-		return m_pCurrentUTCTime;
-	else
-		return m_pCurrentLCLTime;
+	return m_pCurrentFSData->getCurrentTime(mode);
 }
 
-QString ACARSDataBunk::getTimezone(int iSecs)
+ACARSTimeSpan ACARSDataBunk::getTimezone(int iSecs)
 {
-	int hours = iSecs % 3600;
-	int mins = (iSecs-60*hours) % 60;
-
-	return (QString("%1").arg(hours, 2, 10, QChar('0'))).append(QString("%1").arg(mins, 2, 10, QChar('0')));
+	return ACARSTimeSpan(iSecs);
 }
 
-QString ACARSDataBunk::getCurrentTimezone()
+ACARSTimeSpan ACARSDataBunk::getCurrentTimezone()
 {
 
 	int iSecs = m_pCurrentUTCTime->secsTo(*m_pCurrentLCLTime);
 
-	return this->getTimezone(iSecs);
+	ACARSTimeSpan newTimeSpan = ACARSTimeSpan(m_pCurrentFSData->getCurrentTime("UTC").secsTo(m_pCurrentFSData->getCurrentTime("LCL")));
+	
+	return newTimeSpan;
 
 }
 
 int ACARSDataBunk::getCurrentTimezoneI()
 {
 
-	return m_pCurrentUTCTime->secsTo(*m_pCurrentLCLTime);
+	return (m_pCurrentFSData->getCurrentTime("UTC").secsTo(m_pCurrentFSData->getCurrentTime("LCL")));
 
 }
 

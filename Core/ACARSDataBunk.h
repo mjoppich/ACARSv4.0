@@ -57,12 +57,12 @@ public:
 	float getHeading();
 
     //Times
-    QTime* getLastUpdateTime();
+    QTime getLastUpdateTime();
 	void setLastUpdateTime();
-	QTime* getCurrentTime(QString mode = "UTC");
-	QString getCurrentTimezone();
+	QTime getCurrentTime(QString mode = "UTC");
+	ACARSTimeSpan getCurrentTimezone();
 	int getCurrentTimezoneI();
-	QString getTimezone(int iSecs);
+	ACARSTimeSpan getTimezone(int iSecs);
 
 	//Infos
 	float getDistToDest();

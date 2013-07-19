@@ -1,4 +1,4 @@
-#include <QtGui/QApplication>
+#include <QApplication>
 #include <Core/ACARSSystem.h>
 
 int main(int argc, char *argv[])

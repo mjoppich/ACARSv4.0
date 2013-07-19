@@ -3,20 +3,22 @@
 #include <Core/ACARSUser.h>
 #include <QNetworkAccessManager>
 #include <QUrl>
+#include <QUrlQuery>
 #include <QNetworkRequest>
 #include <QNetworkReply>
 
 bool MENUPAGELogin::evaluateLogin(QString username, QString password)
 {
 
-	QUrl postData;
-	postData.addQueryItem("pilot", username);
-	postData.addQueryItem("password", password);
+	QUrlQuery oQuery;
+
+	oQuery.addQueryItem("pilot", username);
+	oQuery.addQueryItem("password", password);
 
 	QNetworkRequest oRequest = QNetworkRequest(QUrl("http://www.flyingtigersgroup.org/acarsftg/ftgacars/pwcheck.asp"));
 	oRequest.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
 
-	m_pNetworkManager->post(oRequest, postData.encodedQuery());
+	m_pNetworkManager->post(oRequest, oQuery.toString().toStdString().c_str());
 
 	return true;
 

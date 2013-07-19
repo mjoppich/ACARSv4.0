@@ -15,7 +15,7 @@
 #include <LiveACARS/FTGLiveACARS.h>
 #include <LiveACARS/LiveACARS.h>
 
-#include"ui_ACARSMainWindow.h"
+#include <ui_ACARSMainWindow.h>
 
 #include <QMouseEvent>
 #include <QKeyEvent>
@@ -49,16 +49,6 @@ ACARSSystem::ACARSSystem(QApplication *pApp, QWidget *parent):
     m_pUI(new Ui::ACARSMainWindow)
 {
     m_pUI->setupUi(this);
-
-
-	//QQuaternion *pQuat = new QQuaternion(  0.697615000000000 ,  0.145765000000000 ,  0.692863000000000 , -0.109666000000000);
-	//QVector3D *pVec = new QVector3D(1,0,0);
-
-	//QMatrix4x4 *pMat = new QMatrix4x4();
-	//pMat->rotate(*pQuat);
-
-	//qDebug() << pQuat->rotatedVector(*pVec) << endl;
-	//qDebug() << *pMat << endl;
 
     this->setWindowTitle(QString("ACARS ").append(ACARSSystem::ACARSVersion));
     this->installEventFilter(this);
@@ -176,7 +166,7 @@ void ACARSSystem::saveScreenShot()
 
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"),initialPath,tr("%1 Files (*.%2);;All Files (*)").arg(format.toUpper()).arg(format));
     if (!fileName.isEmpty())
-        originalPixmap.save(fileName, format.toAscii());
+		originalPixmap.save(fileName, format.toStdString().c_str());
 
 }
 
@@ -318,7 +308,7 @@ bool ACARSSystem::SystemLoop()
         {
 			if (this->HandleEvents(pCurrentIE))
 			{
-				((ACARSMenu*)(m_pViews->currentWidget()))->handleEvent(new ACARSActionEvent(ACARSEVENT::TYPE::VIEWUPDATEEVENT,""));
+				
 			}
         }
 
@@ -358,6 +348,7 @@ bool ACARSSystem::SystemLoop()
 
 	m_pViews->repaint();
 	m_pParentApp->processEvents();
+	((ACARSMenu*)(m_pViews->currentWidget()))->handleEvent(new ACARSActionEvent(ACARSEVENT::TYPE::VIEWUPDATEEVENT,""));
 
     return true;
 }

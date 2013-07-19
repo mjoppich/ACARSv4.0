@@ -31,14 +31,14 @@ bool MENUPAGEProg2::handleEvent(ACARSSystem* pACARSSys, ACARSActionEvent *pIEven
 
 	if (pACARSSys->getACARSData()->ACARSReady())
 	{
-		this->setText(pACARSSys->getACARSData()->getCurrentTime()->toString("hhmm"), "L1");
-		this->setText(pACARSSys->getACARSData()->getCurrentTime("LCL")->toString("hhmm"), "R1");
+		this->setText(pACARSSys->getACARSData()->getCurrentTime().toString("hhmm"), "L1");
+		this->setText(pACARSSys->getACARSData()->getCurrentTime("LCL").toString("hhmm"), "R1");
 
-		this->setText(pACARSSys->getACARSData()->getDepartureAirport()->getCurrentTime(pACARSSys->getACARSData()->getCurrentTime())->toString("hhmm"), "L2");
-		this->setText(pACARSSys->getACARSData()->getArrivalAirport()->getCurrentTime(pACARSSys->getACARSData()->getCurrentTime())->toString("hhmm"), "R2");
+		this->setText(pACARSSys->getACARSData()->getDepartureAirport()->getCurrentTime(pACARSSys->getACARSData()->getCurrentTime()).toString("hhmm"), "L2");
+		this->setText(pACARSSys->getACARSData()->getArrivalAirport()->getCurrentTime(pACARSSys->getACARSData()->getCurrentTime()).toString("hhmm"), "R2");
 
-		this->setText(pACARSSys->getACARSData()->getCurrentTimezone(), "L3");
-		this->setText(pACARSSys->getACARSData()->getTimezone(pACARSSys->getACARSData()->getArrivalAirport()->getTimezone()), "R3");
+		this->setText(pACARSSys->getACARSData()->getCurrentTimezone().toString(), "L3");
+		this->setText(ACARSTimeSpan(pACARSSys->getACARSData()->getArrivalAirport()->getTimezone()).toString(), "R3");
 
 		this->setText(ts(pACARSSys->getACARSData()->getPositionLatLon()->getLat(),8), "L4");
 		this->setText(ts(pACARSSys->getACARSData()->getPositionLatLon()->getLon(),8), "R4");

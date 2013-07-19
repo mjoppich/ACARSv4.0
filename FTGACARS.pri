@@ -12,30 +12,54 @@ HEADERS += ./Core/ACARSDataBunk.h \
     ./Core/ACARSInput.h \
     ./Core/ACARSMenu.h \
     ./Core/ACARSMenuPage.h \
+    ./Core/ACARSInitInfo.h \
     ./Core/ACARSUser.h \
     ./Menus/INIT/MENUInit.h \
     ./Menus/LOGIN/MENULogin.h \
-    ./Menus/INIT/MENUPAGEInit1.h \
-    ./Menus/INIT/MENUPAGEInit2.h \
-    ./Menus/LOGIN/MENUPAGELogin.h \
-    ./FlightSim/ACARSFlightSimData.h \
     ./Core/ACARSInputRegistry.h \
     ./Core/ACARSSystem.h \
-    ./FlightSim/XPLANEFlightSimData.h
+    ./Menus/INIT/MENUInit.h \
+    ./Menus/INIT/MENUPAGEInit1.h \
+    ./Menus/INIT/MENUPAGEInit2.h \
+    ./Menus/LOGIN/MENULogin.h \
+    ./Menus/LOGIN/MENUPAGELogin.h \
+    ./Menus/PROG/MENUProg.h \
+    ./Menus/PROG/MENUPAGEProg.h \
+    ./Menus/PROG/MENUPAGEProg2.h \
+    ./Base/ACARSAircraft.h\
+    ./Base/ACARSAirport.h\
+    ./Base/ACARSFlight.h\
+    ./Base/ACARSLatLon.h\
+    ./Base/ACARSTimeSpan.h \
+    ./FlightSim/XPLANEFlightSimData.h \
+    ./FlightSim/ACARSFlightSimData.h \
+    ./LiveACARS/LiveACARS.h \
+    ./LiveACARS/FTGLiveACARS.h
 SOURCES += ./Core/ACARSDataBunk.cpp \
     ./Core/ACARSEvents.cpp \
-    ./FlightSim/ACARSFlightSimData.cpp \
     ./Core/ACARSInput.cpp \
     ./Core/ACARSInputRegistry.cpp \
+    ./Core/ACARSInitInfo.cpp \
     ./Core/ACARSMenu.cpp \
     ./Core/ACARSMenuPage.cpp \
     ./Core/ACARSSystem.cpp \
     ./Core/ACARSUser.cpp \
-    ./Menus/INIT/MENUInit.cpp \
     ./Menus/LOGIN/MENULogin.cpp \
+    ./Menus/LOGIN/MENUPAGELogin.cpp \
+    ./Menus/INIT/MENUInit.cpp \
     ./Menus/INIT/MENUPAGEInit1.cpp \
     ./Menus/INIT/MENUPAGEInit2.cpp \
-    ./Menus/LOGIN/MENUPAGELogin.cpp \
-    ./main.cpp \
-    ./FlightSim/XPLANEFlightSimData.cpp
+    ./Menus/PROG/MENUProg.cpp \
+    ./Menus/PROG/MENUPAGEProg.cpp \
+    ./Menus/PROG/MENUPAGEProg2.cpp \
+    ./Base/ACARSAircraft.cpp\
+    ./Base/ACARSAirport.cpp\
+    ./Base/ACARSFlight.cpp\
+    ./Base/ACARSLatLon.cpp\
+    ./Base/ACARSTimeSpan.cpp\
+    ./FlightSim/ACARSFlightSimData.cpp \
+    ./FlightSim/XPLANEFlightSimData.cpp \
+    ./LiveACARS/LiveACARS.cpp \
+    ./LiveACARS/FTGLiveACARS.cpp \
+    ./main.cpp
 FORMS += ./Core/ACARSMainWindow.ui

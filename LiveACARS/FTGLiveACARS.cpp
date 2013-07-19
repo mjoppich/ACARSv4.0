@@ -4,6 +4,7 @@
 #include <QUrl>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QUrlQuery>
 
 #include <qdebug.h>
 
@@ -62,7 +63,7 @@ post_material:=post_material+'&current_lat='+HTTPEncodePW(floattostr(FSUIPC.data
 bool FTGLiveACARS::Send(ACARSDataBunk* pData)
 {
 
-	QUrl postData;
+    QUrlQuery postData;
 	postData.addQueryItem("pilotid",pData->getACARSUsername());
 	postData.addQueryItem("remark","");
 	postData.addQueryItem("flightstate","unknown");
@@ -77,7 +78,7 @@ bool FTGLiveACARS::Send(ACARSDataBunk* pData)
 	postData.addQueryItem("arrair_lat", ts(pData->getArrivalAirport()->getLatLon()->getLat()));
 	postData.addQueryItem("altitude", ts(pData->getAltitude("ft")));
 	postData.addQueryItem("machspeed", ts(pData->getMachSpeed(),2));
-	postData.addQueryItem("groundspeed", ts(pData->getGroundSpeed()));
+	postData.addQueryItem("groundspeed", ts(qRound(pData->getGroundSpeed())));
 	postData.addQueryItem("heading", ts(pData->getHeading()));
 	float dist = ACARSLatLon::DistanceFromTo(pData->getDepartureAirport()->getLatLon(),pData->getArrivalAirport()->getLatLon(),"nm");
 	postData.addQueryItem("disttodest", ts(dist,4));
@@ -87,12 +88,10 @@ bool FTGLiveACARS::Send(ACARSDataBunk* pData)
 	postData.addQueryItem("current_lon", ts(pData->getPositionLatLon()->getLon()));
 	postData.addQueryItem("current_lat", ts(pData->getPositionLatLon()->getLat()));
 
-	QNetworkRequest oRequest = QNetworkRequest(QUrl("http://www.flyingtigersgroup.org/acarsftg/ftgacars/write_live.asp"));
-	oRequest.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+    QNetworkRequest oRequest = QNetworkRequest(QUrl("http://www.flyingtigersgroup.org/acarsftg/ftgacars/write_live.asp"));
+    oRequest.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
 
-	qDebug() <<  postData.encodedQuery();
-
-	m_pNetworkManager->post(oRequest, postData.encodedQuery());
+    m_pNetworkManager->post(oRequest, postData.toString().toStdString().c_str());
 
 	return true;
 }

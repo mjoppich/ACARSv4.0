@@ -16,7 +16,7 @@ public:
 	QString getICAOCode();
 
 	ACARSLatLon* getLatLon() {return m_pPosition;}
-	QTime* getCurrentTime(QTime* pUTCTime);
+	QTime getCurrentTime(QTime UTCTime);
 	int getTimezone() {return m_iTimezone;};
 
 	bool isValid();
